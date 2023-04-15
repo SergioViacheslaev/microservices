@@ -10,6 +10,6 @@ class EmployeeServiceTest {
     @Test
     void getEmployeeName() {
         val employeeService = new EmployeeService();
-        assertEquals("Bob", employeeService.getEmployeeName());
+        assertEquals("Bob1", employeeService.getEmployeeName());
     }
 }
