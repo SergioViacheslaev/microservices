@@ -34,3 +34,4 @@ jobs:
 
       - name: Run build with Gradle Wrapper
         run: ./employee-service/gradlew build
+        working-directory: ./employee-service
