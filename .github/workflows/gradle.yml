@@ -33,5 +33,5 @@ jobs:
         uses: gradle/gradle-build-action@v2
 
       - name: Run build with Gradle Wrapper
-        run: ./employee-service/gradlew build
+        run: ./gradlew build
         working-directory: ./employee-service
