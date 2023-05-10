@@ -1,0 +1,1 @@
+INSERT INTO employees (employee_id, name) VALUES ('b16355a9-3edf-418d-bafc-52e46f6703e8', 'mops2');
