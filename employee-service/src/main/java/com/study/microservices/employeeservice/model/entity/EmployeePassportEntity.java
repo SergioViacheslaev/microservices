@@ -2,8 +2,6 @@ package com.study.microservices.employeeservice.model.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -11,21 +9,23 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.UUID;
+import java.time.LocalDate;
 
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "employee")
-public class EmployeeEntity {
+@Table(name = "employee_passport")
+public class EmployeePassportEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "employee_id")
-    private UUID employeeId;
+    @Column(name = "passport_id")
+    private Long passportId;
 
-    @Column(name = "employee_name")
-    private String employeeName;
+    @Column(name = "registration_address")
+    private String registrationAddress;
+
+    @Column(name = "birth_date")
+    private LocalDate birthDate;
 }
