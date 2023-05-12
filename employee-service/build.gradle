@@ -9,6 +9,7 @@ flyway {
 	url = 'jdbc:h2:mem:employees_db;MODE=PostgreSQL'
 	user = 'sa'
 	password = 'sa'
+	cleanDisabled = false
 }
 
 group = 'com.microservices'
@@ -31,6 +32,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
 	implementation 'org.flywaydb:flyway-core:9.17.0'
+	implementation 'org.postgresql:postgresql:42.6.0'
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.h2database:h2'
