@@ -11,6 +11,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
@@ -28,4 +29,10 @@ public class EmployeeEntity {
 
     @Column(name = "employee_name")
     private String employeeName;
+
+    @Column(name = "employee_surname")
+    private String employeeSurname;
+
+    @Column(name = "employee_birth_date")
+    private LocalDate employeeBirthDate;
 }

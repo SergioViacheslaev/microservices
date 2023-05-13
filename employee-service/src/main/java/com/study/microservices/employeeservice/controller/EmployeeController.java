@@ -1,14 +1,12 @@
 package com.study.microservices.employeeservice.controller;
 
-import com.study.microservices.employeeservice.model.dto.EmployeeDto;
+import com.study.microservices.employeeservice.model.dto.EmployeeCreateRequestDto;
+import com.study.microservices.employeeservice.model.dto.EmployeeResponseDto;
 import com.study.microservices.employeeservice.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,8 +15,14 @@ public class EmployeeController {
 
     private final EmployeeService employeeService;
 
+    @PostMapping
+    public ResponseEntity<EmployeeResponseDto> createEmployee(@RequestBody EmployeeCreateRequestDto employeeCreateRequestDto) {
+        return new ResponseEntity<>(employeeService.createEmployee(employeeCreateRequestDto), HttpStatus.OK);
+    }
+
     @GetMapping
-    public ResponseEntity<EmployeeDto> getEmployeeByName(@RequestParam String name) {
-        return new ResponseEntity<>(employeeService.getEmployeeByName(name), HttpStatus.OK);
+    public ResponseEntity<EmployeeResponseDto> getEmployeeByNameAndSurname(@RequestParam String employeeName,
+                                                                           @RequestParam String employeeSurname) {
+        return new ResponseEntity<>(employeeService.getEmployeeByNameAndSurname(employeeName, employeeSurname), HttpStatus.OK);
     }
 }

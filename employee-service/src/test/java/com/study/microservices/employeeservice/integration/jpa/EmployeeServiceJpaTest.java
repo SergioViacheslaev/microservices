@@ -6,26 +6,29 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.time.LocalDate;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
-//@AutoConfigureTestDatabase override to not use H2
+//@AutoConfigureTestDatabase override to use other db than h2
 public class EmployeeServiceJpaTest {
 
     @Autowired
     private EmployeeRepository employeeRepository;
 
     @Test
-    void initial_db_data_test() {
+    void should_save_employee() {
         employeeRepository.save(EmployeeEntity.builder()
-                .employeeId(UUID.randomUUID())
-                .employeeName("test123")
+                .employeeName("Foo")
+                .employeeSurname("Bar")
+                .employeeBirthDate(LocalDate.now())
                 .build());
 
-        Optional<EmployeeEntity> optionalEmployee = employeeRepository.findByEmployeeName("test123");
+        Optional<EmployeeEntity> optionalEmployee = employeeRepository.findByEmployeeNameAndEmployeeSurname(
+                "Foo",
+                "Bar");
 
         assertTrue(optionalEmployee.isPresent());
     }

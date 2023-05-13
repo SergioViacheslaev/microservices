@@ -9,8 +9,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-
 @Entity
 @Data
 @Builder
@@ -26,6 +24,4 @@ public class EmployeePassportEntity {
     @Column(name = "registration_address")
     private String registrationAddress;
 
-    @Column(name = "birth_date")
-    private LocalDate birthDate;
 }
