@@ -1,5 +1,6 @@
 package com.study.microservices.employeeservice.service;
 
+import com.study.microservices.employeeservice.dao.EmployeeEntityDao;
 import com.study.microservices.employeeservice.exception.EmployeeFoundException;
 import com.study.microservices.employeeservice.exception.EmployeeNotFoundException;
 import com.study.microservices.employeeservice.model.dto.EmployeeCreateRequestDto;
@@ -11,11 +12,37 @@ import lombok.val;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
+    private final EmployeeEntityDao employeeEntityDao;
+
+    @Transactional(readOnly = true)
+    public List<EmployeeResponseDto> getAllEmployees() {
+        //with employeeEntityDao
+        return employeeEntityDao.findAll().stream()
+                .map(employeeEntity -> EmployeeResponseDto.builder()
+                        .employeeId(employeeEntity.getEmployeeId())
+                        .employeeName(employeeEntity.getEmployeeName())
+                        .employeeSurname(employeeEntity.getEmployeeSurname())
+                        .employeeBirthDate(employeeEntity.getEmployeeBirthDate())
+                        .build())
+                .toList();
+
+        // with employeeRepository
+       /* return employeeRepository.findAll().stream()
+                .map(employeeEntity -> EmployeeResponseDto.builder()
+                        .employeeId(employeeEntity.getEmployeeId())
+                        .employeeName(employeeEntity.getEmployeeName())
+                        .employeeSurname(employeeEntity.getEmployeeSurname())
+                        .employeeBirthDate(employeeEntity.getEmployeeBirthDate())
+                        .build())
+                .toList();*/
+    }
 
     @Transactional(readOnly = true)
     public EmployeeResponseDto getEmployeeByNameAndSurname(String employeeName, String employeeSurname) {

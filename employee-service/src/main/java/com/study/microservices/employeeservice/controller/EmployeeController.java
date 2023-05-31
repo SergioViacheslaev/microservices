@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/api/v1/employees")
@@ -21,6 +23,11 @@ public class EmployeeController {
     }
 
     @GetMapping
+    public ResponseEntity<List<EmployeeResponseDto>> getAllEmployees() {
+        return new ResponseEntity<>(employeeService.getAllEmployees(), HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/filter")
     public ResponseEntity<EmployeeResponseDto> getEmployeeByNameAndSurname(@RequestParam String employeeName,
                                                                            @RequestParam String employeeSurname) {
         return new ResponseEntity<>(employeeService.getEmployeeByNameAndSurname(employeeName, employeeSurname), HttpStatus.OK);
