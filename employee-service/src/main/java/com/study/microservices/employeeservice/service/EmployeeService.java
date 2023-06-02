@@ -8,6 +8,8 @@ import com.study.microservices.employeeservice.model.dto.EmployeeResponseDto;
 import com.study.microservices.employeeservice.model.entity.EmployeeEntity;
 import com.study.microservices.employeeservice.repo.EmployeeRepository;
 import lombok.val;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,8 +54,8 @@ public class EmployeeService {
     }
 
     @Transactional(readOnly = true)
-    public List<EmployeeResponseDto> getAllEmployeesByNameSortedByBirthDate(String employeeName, int page, int size) {
-        return employeeRepository.findAllByEmployeeNameOrderByEmployeeBirthDate(employeeName, PageRequest.of(page, size)).stream()
+    public Page<EmployeeResponseDto> getAllEmployeesByNameSortedByBirthDate(String employeeName, int page, int size) {
+        val employeeResponseDtoList = employeeRepository.findAllByEmployeeNameOrderByEmployeeBirthDate(employeeName, PageRequest.of(page, size)).stream()
                 .map(employeeEntity -> EmployeeResponseDto.builder()
                         .employeeId(employeeEntity.getEmployeeId())
                         .employeeName(employeeEntity.getEmployeeName())
@@ -61,6 +63,8 @@ public class EmployeeService {
                         .employeeBirthDate(employeeEntity.getEmployeeBirthDate())
                         .build())
                 .toList();
+
+        return new PageImpl<>(employeeResponseDtoList);
     }
 
     @Transactional(readOnly = true)

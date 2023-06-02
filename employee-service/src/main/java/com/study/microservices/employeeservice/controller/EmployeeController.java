@@ -5,6 +5,7 @@ import com.study.microservices.employeeservice.model.dto.EmployeeResponseDto;
 import com.study.microservices.employeeservice.service.EmployeeService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,7 @@ public class EmployeeController {
 
     @Operation(summary = "Find all Employees by name sorted by birthDate")
     @GetMapping(path = "/{employeeName}")
-    public ResponseEntity<List<EmployeeResponseDto>> getAllEmployeesByName(@PathVariable String employeeName,
+    public ResponseEntity<Page<EmployeeResponseDto>> getAllEmployeesByName(@PathVariable String employeeName,
                                                                            @RequestParam Integer page,
                                                                            @RequestParam Integer size) {
         return new ResponseEntity<>(employeeService.getAllEmployeesByNameSortedByBirthDate(employeeName, page, size), HttpStatus.OK);
