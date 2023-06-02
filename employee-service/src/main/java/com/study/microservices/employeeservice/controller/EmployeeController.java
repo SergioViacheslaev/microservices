@@ -29,6 +29,14 @@ public class EmployeeController {
         return new ResponseEntity<>(employeeService.getAllEmployees(), HttpStatus.OK);
     }
 
+    @Operation(summary = "Find all Employees by name sorted by birthDate")
+    @GetMapping(path = "/{employeeName}")
+    public ResponseEntity<List<EmployeeResponseDto>> getAllEmployeesByName(@PathVariable String employeeName,
+                                                                           @RequestParam Integer page,
+                                                                           @RequestParam Integer size) {
+        return new ResponseEntity<>(employeeService.getAllEmployeesByNameSortedByBirthDate(employeeName, page, size), HttpStatus.OK);
+    }
+
     @GetMapping(path = "/filter")
     public ResponseEntity<EmployeeResponseDto> getEmployeeByNameAndSurname(@RequestParam String employeeName,
                                                                            @RequestParam String employeeSurname) {

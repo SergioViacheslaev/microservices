@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Primary
+//@Primary
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -22,7 +22,6 @@ public class EmployeeEntityJdbcTemplateDao implements EmployeeEntityDao {
     public List<EmployeeEntity> findAll() {
         log.info("EmployeeEntityJdbcTemplateDao findAll EmployeeEntity");
 
-        //with jdbcTemplate
         return jdbcTemplate.query("SELECT * FROM employee", new EmployeeEntityRowMapper());
     }
 }
