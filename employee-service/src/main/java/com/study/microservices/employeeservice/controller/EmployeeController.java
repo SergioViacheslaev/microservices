@@ -3,6 +3,7 @@ package com.study.microservices.employeeservice.controller;
 import com.study.microservices.employeeservice.model.dto.EmployeeCreateRequestDto;
 import com.study.microservices.employeeservice.model.dto.EmployeeResponseDto;
 import com.study.microservices.employeeservice.service.EmployeeService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ public class EmployeeController {
         return new ResponseEntity<>(employeeService.createEmployee(employeeCreateRequestDto), HttpStatus.OK);
     }
 
+    @Operation(summary = "Find all Employees", description = "Find all Employees description")
     @GetMapping
     public ResponseEntity<List<EmployeeResponseDto>> getAllEmployees() {
         return new ResponseEntity<>(employeeService.getAllEmployees(), HttpStatus.OK);

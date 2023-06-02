@@ -7,7 +7,6 @@ import com.study.microservices.employeeservice.model.dto.EmployeeCreateRequestDt
 import com.study.microservices.employeeservice.model.dto.EmployeeResponseDto;
 import com.study.microservices.employeeservice.model.entity.EmployeeEntity;
 import com.study.microservices.employeeservice.repo.EmployeeRepository;
-import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,15 +14,22 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
     private final EmployeeEntityDao employeeEntityDao;
 
+    public EmployeeService(EmployeeRepository employeeRepository,
+//                           @Qualifier(value = "employeeEntityJdbcTemplateDao")
+//                           @Qualifier(value = "employeeEntityHibernateDao")
+                           EmployeeEntityDao employeeEntityDao) {
+        this.employeeRepository = employeeRepository;
+        this.employeeEntityDao = employeeEntityDao;
+    }
+
     @Transactional(readOnly = true)
     public List<EmployeeResponseDto> getAllEmployees() {
-        //with employeeEntityDao
+        // with DAO
         return employeeEntityDao.findAll().stream()
                 .map(employeeEntity -> EmployeeResponseDto.builder()
                         .employeeId(employeeEntity.getEmployeeId())
@@ -46,16 +52,15 @@ public class EmployeeService {
 
     @Transactional(readOnly = true)
     public EmployeeResponseDto getEmployeeByNameAndSurname(String employeeName, String employeeSurname) {
-        EmployeeEntity foundEmployeeEntity = employeeRepository.findByEmployeeNameAndEmployeeSurname(employeeName, employeeSurname)
+        return employeeRepository.findByEmployeeNameAndEmployeeSurname(employeeName, employeeSurname)
+                .map(employeeEntity -> EmployeeResponseDto.builder()
+                        .employeeId(employeeEntity.getEmployeeId())
+                        .employeeName(employeeEntity.getEmployeeName())
+                        .employeeSurname(employeeEntity.getEmployeeSurname())
+                        .employeeBirthDate(employeeEntity.getEmployeeBirthDate())
+                        .build())
                 .orElseThrow(() -> new EmployeeNotFoundException(
-                        String.format("No Employee with these name or surname %s %s", employeeName, employeeSurname)));
-
-        return EmployeeResponseDto.builder()
-                .employeeId(foundEmployeeEntity.getEmployeeId())
-                .employeeName(foundEmployeeEntity.getEmployeeName())
-                .employeeSurname(foundEmployeeEntity.getEmployeeSurname())
-                .employeeBirthDate(foundEmployeeEntity.getEmployeeBirthDate())
-                .build();
+                        String.format("Employee with name %s and surname %s doesn't exist", employeeName, employeeSurname)));
     }
 
     @Transactional
