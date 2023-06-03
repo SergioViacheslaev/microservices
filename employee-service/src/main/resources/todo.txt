@@ -1,2 +1,2 @@
 1. Use MapStruct entity->Dto
-2. Add audit CREATED_BY, UPDATED_BY
+2. Add audit CREATED_BY, UPDATED_BY, CREATED_ON, UPDATED_ON
