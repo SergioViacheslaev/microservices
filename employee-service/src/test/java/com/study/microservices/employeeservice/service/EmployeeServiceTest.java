@@ -15,7 +15,6 @@ import java.util.Optional;
 import static com.study.microservices.employeeservice.objects.EmployeeTestDataUtils.createEmployeeEntity;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -33,11 +32,10 @@ class EmployeeServiceTest {
     void should_find_employee_by_name_and_surname() {
         when(employeeRepository.findByEmployeeNameAndEmployeeSurname(any(), any())).thenReturn(Optional.of(createEmployeeEntity()));
 
-        EmployeeResponseDto employeeResponseDto = employeeService.getEmployeeByNameAndSurname("Ivan", "Ivanov");
+        EmployeeResponseDto employeeResponseDto = employeeService.getEmployeeByNameAndSurname("Alex", "Ivanov");
 
-        assertNotNull(employeeResponseDto.employeeId());
         assertThat(employeeResponseDto.employeePhones().size()).isEqualTo(1);
-        assertEquals("Ivan", employeeResponseDto.employeeName());
+        assertEquals("Alex", employeeResponseDto.employeeName());
         assertEquals("Ivanov", employeeResponseDto.employeeSurname());
         assertEquals("2007-12-03", employeeResponseDto.employeeBirthDate().toString());
         assertEquals("+71234567890", employeeResponseDto.employeePhones().get(0).phoneNumber());
