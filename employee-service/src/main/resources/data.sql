@@ -4,11 +4,11 @@ VALUES ('b16355a9-3edf-418d-bafc-52e46f6703e1',
         'Ivanov',
         '2000-09-11'),
        ('b16355a9-3edf-418d-bafc-52e46f6703e2',
-        'Ivan',
+        'Petr',
         'Ivanov',
         '1987-09-11'),
        ('b16355a9-3edf-418d-bafc-52e46f6703e3',
-        'Ivan',
+        'Oleg',
         'Ivanov',
         '1990-09-11'),
        ('b16355a9-3edf-418d-bafc-52e46f6703e4',
@@ -19,3 +19,7 @@ VALUES ('b16355a9-3edf-418d-bafc-52e46f6703e1',
         'Sergei',
         'Ivanov',
         '2005-09-11');
+
+INSERT INTO employee_phone (employee_id, phone_number)
+VALUES ('b16355a9-3edf-418d-bafc-52e46f6703e1', '+792112345671'),
+       ('b16355a9-3edf-418d-bafc-52e46f6703e1', '+796598387472')
