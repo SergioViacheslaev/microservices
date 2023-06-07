@@ -1,4 +1,4 @@
-INSERT INTO employee (employee_id, employee_name, employee_surname, employee_birth_date)
+INSERT INTO employees (employee_id, employee_name, employee_surname, employee_birth_date)
 VALUES ('b16355a9-3edf-418d-bafc-52e46f6703e1',
         'Ivan',
         'Ivanov',
@@ -20,6 +20,6 @@ VALUES ('b16355a9-3edf-418d-bafc-52e46f6703e1',
         'Ivanov',
         '2005-09-11');
 
-INSERT INTO employee_phone (employee_id, phone_number)
+INSERT INTO employee_phones (employee_id, phone_number)
 VALUES ('b16355a9-3edf-418d-bafc-52e46f6703e1', '+792112345671'),
        ('b16355a9-3edf-418d-bafc-52e46f6703e1', '+796598387472')

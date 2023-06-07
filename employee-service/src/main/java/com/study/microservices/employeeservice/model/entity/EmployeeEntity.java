@@ -31,7 +31,7 @@ import static jakarta.persistence.CascadeType.ALL;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Table(name = "employee")
+@Table(name = "employees")
 public class EmployeeEntity extends AuditedEntity {
 
     @Id

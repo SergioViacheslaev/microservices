@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-@Table(name = "employee_phone")
+@Table(name = "employee_phones")
 public class EmployeePhoneEntity {
 
     @Id

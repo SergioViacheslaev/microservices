@@ -15,7 +15,7 @@ public interface EmployeeRepository extends JpaRepository<EmployeeEntity, UUID> 
     Optional<EmployeeEntity> findByEmployeeNameAndEmployeeSurname(String employeeName, String employeeSurname);
 
     @Query(
-            value = "SELECT * FROM employee left join employee_phone using (employee_id) where phone_number = :phoneNumber",
+            value = "SELECT * FROM employees left join employee_phones using (employee_id) where phone_number = :phoneNumber",
             nativeQuery = true)
     Optional<EmployeeEntity> findByEmployeePhoneNumber(@Param("phoneNumber") String phoneNumber);
 
