@@ -37,6 +37,7 @@ public class EmployeeController {
     @Operation(summary = "Find all Employees", description = "Find all Employees description")
     @GetMapping
     public ResponseEntity<List<EmployeeResponseDto>> getAllEmployees() {
+        log.info("Received getAllEmployees request");
         return new ResponseEntity<>(employeeService.getAllEmployees(), HttpStatus.OK);
     }
 

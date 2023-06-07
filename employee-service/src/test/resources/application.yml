@@ -5,13 +5,13 @@ server:
 
 spring:
   datasource:
-    url: jdbc:h2:mem:employees_db;MODE=PostgreSQL
+    url: jdbc:h2:mem:employees_db:${random.uuid};MODE=PostgreSQL
     username: sa
     password: sa
     driverClassName: org.h2.Driver
   sql:
     init:
-      data-locations: data-test.sql
+      data-locations: classpath:data-test.sql
   jpa:
     open-in-view: false
     database-platform: org.hibernate.dialect.PostgreSQLDialect
