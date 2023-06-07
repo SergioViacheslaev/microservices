@@ -49,7 +49,7 @@ public class EmployeeService {
 
     @Transactional(readOnly = true)
     public Page<EmployeeResponseDto> getAllEmployeesByNameSortedByBirthDate(String employeeName, int page, int size) {
-        val employeeResponseDtoList = employeeRepository.findAllByEmployeeNameOrderByEmployeeBirthDate(employeeName, PageRequest.of(page, size))
+        val employeeResponseDtoList = employeeRepository.findAllByNameOrderByBirthDate(employeeName, PageRequest.of(page, size))
                 .stream()
                 .map(this::getEmployeeResponseDtoFromEntity)
                 .toList();
@@ -59,7 +59,7 @@ public class EmployeeService {
 
     @Transactional(readOnly = true)
     public EmployeeResponseDto getEmployeeByNameAndSurname(String employeeName, String employeeSurname) {
-        return employeeRepository.findByEmployeeNameAndEmployeeSurname(employeeName, employeeSurname)
+        return employeeRepository.findByNameAndSurname(employeeName, employeeSurname)
                 .map(this::getEmployeeResponseDtoFromEntity)
                 .orElseThrow(() -> new EmployeeNotFoundException(
                         String.format("Employee with name %s and surname %s doesn't exist", employeeName, employeeSurname)));
@@ -67,27 +67,27 @@ public class EmployeeService {
 
     @Transactional
     public EmployeeResponseDto createEmployee(EmployeeCreateRequestDto employeeCreateRequestDto) {
-        val employeeName = employeeCreateRequestDto.employeeName();
-        val employeeSurname = employeeCreateRequestDto.employeeSurname();
-        employeeRepository.findByEmployeeNameAndEmployeeSurname(employeeName, employeeSurname)
+        val employeeName = employeeCreateRequestDto.name();
+        val employeeSurname = employeeCreateRequestDto.surname();
+        employeeRepository.findByNameAndSurname(employeeName, employeeSurname)
                 .ifPresent(employee -> {
                     throw new EmployeeFoundException(
                             String.format("Employee with name %s, surname %s already exists", employeeName, employeeSurname));
                 });
 
         final EmployeeEntity employeeEntityToSave = EmployeeEntity.builder()
-                .employeeName(employeeName)
-                .employeeSurname(employeeSurname)
-                .employeeBirthDate(employeeCreateRequestDto.employeeBirthDate())
+                .name(employeeName)
+                .surname(employeeSurname)
+                .birthDate(employeeCreateRequestDto.birthDate())
                 .build();
 
-        final List<EmployeePhoneEntity> employeePhoneEntitiesToSave = employeeCreateRequestDto.employeePhones().stream()
+        final List<EmployeePhoneEntity> employeePhoneEntitiesToSave = employeeCreateRequestDto.phones().stream()
                 .map(employeePhone -> EmployeePhoneEntity.builder()
                         .phoneNumber(employeePhone.phoneNumber())
                         .build())
                 .toList();
 
-        employeeEntityToSave.setEmployeePhones(employeePhoneEntitiesToSave);
+        employeeEntityToSave.setPhones(employeePhoneEntitiesToSave);
         employeePhoneEntitiesToSave.forEach(employeePhoneEntity -> employeePhoneEntity.setEmployee(employeeEntityToSave));
 
         val savedEmployeeEntity = employeeRepository.save(employeeEntityToSave);
@@ -101,7 +101,7 @@ public class EmployeeService {
     //todo: check if possible to get all employee phone numbers in single SQL
     @Transactional(readOnly = true)
     public EmployeeResponseDto findEmployeeByPhoneNumber(String phoneNumber) {
-        val employeeEntity = employeeRepository.findByEmployeePhoneNumber(phoneNumber)
+        val employeeEntity = employeeRepository.findByPhoneNumber(phoneNumber)
                 .orElseThrow(() -> new EmployeeNotFoundException(
                         String.format("Employee with such phone number %s doesn't exist", phoneNumber)));
 
@@ -112,11 +112,11 @@ public class EmployeeService {
 
     private EmployeeResponseDto getEmployeeResponseDtoFromEntity(EmployeeEntity employeeEntity) {
         return EmployeeResponseDto.builder()
-                .employeeId(employeeEntity.getEmployeeId())
-                .employeeName(employeeEntity.getEmployeeName())
-                .employeeSurname(employeeEntity.getEmployeeSurname())
-                .employeeBirthDate(employeeEntity.getEmployeeBirthDate())
-                .employeePhones(employeeEntity.getEmployeePhones().stream()
+                .Id(employeeEntity.getId())
+                .name(employeeEntity.getName())
+                .surname(employeeEntity.getSurname())
+                .birthDate(employeeEntity.getBirthDate())
+                .phones(employeeEntity.getPhones().stream()
                         .map(employeePhoneEntity -> EmployeePhone.builder()
                                 .phoneNumber(employeePhoneEntity.getPhoneNumber())
                                 .build()).toList()

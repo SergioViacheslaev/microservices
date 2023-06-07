@@ -14,16 +14,16 @@ public class EmployeeTestDataUtils {
 
     public static EmployeeEntity createEmployeeEntity() {
         EmployeeEntity employeeEntity = EmployeeEntity.builder()
-                .employeeName("Alex")
-                .employeeSurname("Ivanov")
-                .employeeBirthDate(LocalDate.parse("2007-12-03"))
+                .name("Alex")
+                .surname("Ivanov")
+                .birthDate(LocalDate.parse("2007-12-03"))
                 .build();
 
         List<EmployeePhoneEntity> employeePhoneEntities = List.of(EmployeePhoneEntity.builder()
                 .phoneNumber("+71234567890")
                 .build());
 
-        employeeEntity.setEmployeePhones(employeePhoneEntities);
+        employeeEntity.setPhones(employeePhoneEntities);
         employeePhoneEntities.forEach(employeePhoneEntity -> employeePhoneEntity.setEmployee(employeeEntity));
 
         return employeeEntity;
@@ -31,11 +31,11 @@ public class EmployeeTestDataUtils {
 
     public static EmployeeResponseDto createEmployeeResponseDto(EmployeeEntity employeeEntity) {
         return EmployeeResponseDto.builder()
-                .employeeId(employeeEntity.getEmployeeId())
-                .employeeName(employeeEntity.getEmployeeName())
-                .employeeSurname(employeeEntity.getEmployeeSurname())
-                .employeeBirthDate(employeeEntity.getEmployeeBirthDate())
-                .employeePhones(employeeEntity.getEmployeePhones().stream()
+                .Id(employeeEntity.getId())
+                .name(employeeEntity.getName())
+                .surname(employeeEntity.getSurname())
+                .birthDate(employeeEntity.getBirthDate())
+                .phones(employeeEntity.getPhones().stream()
                         .map(employeePhoneEntity -> EmployeePhone.builder()
                                 .phoneNumber(employeePhoneEntity.getPhoneNumber())
                                 .build()).toList()

@@ -34,15 +34,15 @@ public class EmployeeServiceJpaTest {
         val employeeEntityToSave = createEmployeeEntity();
         employeeRepository.save(employeeEntityToSave);
 
-        Optional<EmployeeEntity> optionalEmployee = employeeRepository.findByEmployeeNameAndEmployeeSurname("Alex", "Ivanov");
+        Optional<EmployeeEntity> optionalEmployee = employeeRepository.findByNameAndSurname("Alex", "Ivanov");
 
         assertTrue(optionalEmployee.isPresent());
         val employeeEntity = optionalEmployee.get();
-        assertThat(employeeEntity.getEmployeePhones().size()).isEqualTo(1);
-        assertEquals(employeeEntityToSave.getEmployeeName(), employeeEntity.getEmployeeName());
-        assertEquals(employeeEntityToSave.getEmployeeSurname(), employeeEntity.getEmployeeSurname());
+        assertThat(employeeEntity.getPhones().size()).isEqualTo(1);
+        assertEquals(employeeEntityToSave.getName(), employeeEntity.getName());
+        assertEquals(employeeEntityToSave.getSurname(), employeeEntity.getSurname());
 
-        assertNotNull(employeeEntity.getEmployeeId());
+        assertNotNull(employeeEntity.getId());
         assertNotNull(employeeEntity.getCreatedOn());
         assertNotNull(employeeEntity.getUpdatedOn());
         assertNull(employeeEntity.getCreatedBy());
@@ -52,7 +52,7 @@ public class EmployeeServiceJpaTest {
     @Test
     @DisplayName("Должен найти Employee по имени и фамилии")
     void should_find_employee() {
-        Optional<EmployeeEntity> optionalEmployee = employeeRepository.findByEmployeeNameAndEmployeeSurname("Ivan", "Testov");
+        Optional<EmployeeEntity> optionalEmployee = employeeRepository.findByNameAndSurname("Ivan", "Testov");
 
         assertTrue(optionalEmployee.isPresent());
     }
@@ -64,7 +64,7 @@ public class EmployeeServiceJpaTest {
 
         assertThat(allEmployees).isNotNull()
                 .hasSize(5)
-                .allMatch(employeeEntity -> employeeEntity.getEmployeeSurname().equals("Testov"));
+                .allMatch(employeeEntity -> employeeEntity.getSurname().equals("Testov"));
     }
 
 }

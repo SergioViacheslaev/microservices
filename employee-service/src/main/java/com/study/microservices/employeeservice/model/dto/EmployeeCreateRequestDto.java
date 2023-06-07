@@ -8,8 +8,8 @@ import java.util.List;
 
 @Builder
 public record EmployeeCreateRequestDto(
-        String employeeName,
-        String employeeSurname,
-        LocalDate employeeBirthDate,
-        List<EmployeePhone> employeePhones) {
+        String name,
+        String surname,
+        LocalDate birthDate,
+        List<EmployeePhone> phones) {
 }

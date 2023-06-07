@@ -37,23 +37,23 @@ public class EmployeeEntity extends AuditedEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "employee_id")
-    private UUID employeeId;
+    private UUID Id;
 
     @Column(name = "employee_name")
-    private String employeeName;
+    private String name;
 
     @Column(name = "employee_surname")
-    private String employeeSurname;
+    private String surname;
 
     @Column(name = "employee_birth_date")
-    private LocalDate employeeBirthDate;
+    private LocalDate birthDate;
 
     @OneToMany(cascade = ALL, mappedBy = "employee", fetch = FetchType.LAZY)
     @ToString.Exclude
     @Getter(AccessLevel.NONE)
-    private List<EmployeePhoneEntity> employeePhones;
+    private List<EmployeePhoneEntity> phones;
 
-    public List<EmployeePhoneEntity> getEmployeePhones() {
-        return Objects.isNull(employeePhones) ? Collections.emptyList() : employeePhones;
+    public List<EmployeePhoneEntity> getPhones() {
+        return Objects.isNull(phones) ? Collections.emptyList() : phones;
     }
 }

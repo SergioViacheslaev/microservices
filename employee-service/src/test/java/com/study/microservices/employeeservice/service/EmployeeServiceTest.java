@@ -30,20 +30,20 @@ class EmployeeServiceTest {
 
     @Test
     void should_find_employee_by_name_and_surname() {
-        when(employeeRepository.findByEmployeeNameAndEmployeeSurname(any(), any())).thenReturn(Optional.of(createEmployeeEntity()));
+        when(employeeRepository.findByNameAndSurname(any(), any())).thenReturn(Optional.of(createEmployeeEntity()));
 
         EmployeeResponseDto employeeResponseDto = employeeService.getEmployeeByNameAndSurname("Alex", "Ivanov");
 
-        assertThat(employeeResponseDto.employeePhones().size()).isEqualTo(1);
-        assertEquals("Alex", employeeResponseDto.employeeName());
-        assertEquals("Ivanov", employeeResponseDto.employeeSurname());
-        assertEquals("2007-12-03", employeeResponseDto.employeeBirthDate().toString());
-        assertEquals("+71234567890", employeeResponseDto.employeePhones().get(0).phoneNumber());
+        assertThat(employeeResponseDto.phones().size()).isEqualTo(1);
+        assertEquals("Alex", employeeResponseDto.name());
+        assertEquals("Ivanov", employeeResponseDto.surname());
+        assertEquals("2007-12-03", employeeResponseDto.birthDate().toString());
+        assertEquals("+71234567890", employeeResponseDto.phones().get(0).phoneNumber());
     }
 
     @Test
     void should_throw_exception_when_employee_not_found() {
-        when(employeeRepository.findByEmployeeNameAndEmployeeSurname(any(), any())).thenReturn(Optional.empty());
+        when(employeeRepository.findByNameAndSurname(any(), any())).thenReturn(Optional.empty());
 
         val employeeNotFoundException = assertThrows(EmployeeNotFoundException.class,
                 () -> employeeService.getEmployeeByNameAndSurname("Ivan", "Ivanov"));

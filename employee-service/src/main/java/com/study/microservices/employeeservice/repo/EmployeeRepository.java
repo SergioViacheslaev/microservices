@@ -12,12 +12,12 @@ import java.util.UUID;
 
 public interface EmployeeRepository extends JpaRepository<EmployeeEntity, UUID> {
 
-    Optional<EmployeeEntity> findByEmployeeNameAndEmployeeSurname(String employeeName, String employeeSurname);
+    Optional<EmployeeEntity> findByNameAndSurname(String employeeName, String employeeSurname);
 
     @Query(
             value = "SELECT * FROM employees left join employee_phones using (employee_id) where phone_number = :phoneNumber",
             nativeQuery = true)
-    Optional<EmployeeEntity> findByEmployeePhoneNumber(@Param("phoneNumber") String phoneNumber);
+    Optional<EmployeeEntity> findByPhoneNumber(@Param("phoneNumber") String phoneNumber);
 
-    Page<EmployeeEntity> findAllByEmployeeNameOrderByEmployeeBirthDate(String employeeName, Pageable page);
+    Page<EmployeeEntity> findAllByNameOrderByBirthDate(String employeeName, Pageable page);
 }

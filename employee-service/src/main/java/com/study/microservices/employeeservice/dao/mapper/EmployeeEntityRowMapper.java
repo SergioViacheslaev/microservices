@@ -11,10 +11,10 @@ public class EmployeeEntityRowMapper implements RowMapper<EmployeeEntity> {
     @Override
     public EmployeeEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
         return EmployeeEntity.builder()
-                .employeeId(rs.getObject("employee_id", java.util.UUID.class))
-                .employeeName(rs.getString("employee_name"))
-                .employeeSurname(rs.getString("employee_surname"))
-                .employeeBirthDate(rs.getTimestamp("employee_birth_date").toLocalDateTime().toLocalDate())
+                .Id(rs.getObject("employee_id", java.util.UUID.class))
+                .name(rs.getString("employee_name"))
+                .surname(rs.getString("employee_surname"))
+                .birthDate(rs.getTimestamp("employee_birth_date").toLocalDateTime().toLocalDate())
                 .build();
     }
 }
