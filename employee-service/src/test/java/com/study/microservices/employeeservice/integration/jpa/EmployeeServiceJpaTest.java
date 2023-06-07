@@ -10,11 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.study.microservices.employeeservice.objects.EmployeeTestDataUtils.createEmployeeEntity;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
 @Import(PersistenceConfig.class)
@@ -43,6 +47,24 @@ public class EmployeeServiceJpaTest {
         assertNotNull(employeeEntity.getUpdatedOn());
         assertNull(employeeEntity.getCreatedBy());
         assertNull(employeeEntity.getUpdatedBy());
+    }
+
+    @Test
+    @DisplayName("Должен найти Employee по имени и фамилии")
+    void should_find_employee() {
+        Optional<EmployeeEntity> optionalEmployee = employeeRepository.findByEmployeeNameAndEmployeeSurname("Ivan", "Testov");
+
+        assertTrue(optionalEmployee.isPresent());
+    }
+
+    @Test
+    @DisplayName("Должен найти всех Employee")
+    void should_find_all_employee() {
+        List<EmployeeEntity> allEmployees = employeeRepository.findAll();
+
+        assertThat(allEmployees).isNotNull()
+                .hasSize(5)
+                .allMatch(employeeEntity -> employeeEntity.getEmployeeSurname().equals("Testov"));
     }
 
 }
