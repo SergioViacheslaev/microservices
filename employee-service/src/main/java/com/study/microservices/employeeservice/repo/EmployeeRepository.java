@@ -15,8 +15,12 @@ public interface EmployeeRepository extends JpaRepository<EmployeeEntity, UUID> 
     Optional<EmployeeEntity> findByNameAndSurname(String employeeName, String employeeSurname);
 
     @Query(
-            value = "SELECT * FROM employees left join employee_phones using (employee_id) where phone_number = :phoneNumber",
-            nativeQuery = true)
+            value = """ 
+                    SELECT e,e_passport, e_phone FROM EmployeeEntity e
+                    left join fetch EmployeePassportEntity e_passport on e.Id = e_passport.employeeId
+                    left join fetch EmployeePhoneEntity e_phone on e.Id = e_phone.employee.Id
+                    where e_phone.phoneNumber = :phoneNumber
+                    """)
     Optional<EmployeeEntity> findByPhoneNumber(@Param("phoneNumber") String phoneNumber);
 
     Page<EmployeeEntity> findAllByNameOrderByBirthDate(String employeeName, Pageable page);

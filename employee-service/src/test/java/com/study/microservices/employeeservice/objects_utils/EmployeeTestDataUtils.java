@@ -3,6 +3,7 @@ package com.study.microservices.employeeservice.objects_utils;
 import com.study.microservices.employeeservice.model.dto.EmployeePhone;
 import com.study.microservices.employeeservice.model.dto.EmployeeResponseDto;
 import com.study.microservices.employeeservice.model.entity.EmployeeEntity;
+import com.study.microservices.employeeservice.model.entity.EmployeePassportEntity;
 import com.study.microservices.employeeservice.model.entity.EmployeePhoneEntity;
 import lombok.experimental.UtilityClass;
 
@@ -20,10 +21,17 @@ public class EmployeeTestDataUtils {
                 .build();
 
         List<EmployeePhoneEntity> employeePhoneEntities = List.of(EmployeePhoneEntity.builder()
-                .phoneNumber("+71234567890")
+                .phoneNumber("71234567890")
                 .build());
 
+        EmployeePassportEntity employeePassportEntity = EmployeePassportEntity.builder()
+                .passportNumber(123456780L)
+                .registrationAddress("Улица Пушкина Дом 1")
+                .build();
+
         employeeEntity.setPhones(employeePhoneEntities);
+        employeeEntity.setPassport(employeePassportEntity);
+        employeePassportEntity.setEmployee(employeeEntity);
         employeePhoneEntities.forEach(employeePhoneEntity -> employeePhoneEntity.setEmployee(employeeEntity));
 
         return employeeEntity;

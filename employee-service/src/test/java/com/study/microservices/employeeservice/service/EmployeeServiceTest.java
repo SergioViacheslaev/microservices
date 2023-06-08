@@ -38,7 +38,7 @@ class EmployeeServiceTest {
         assertEquals("Alex", employeeResponseDto.name());
         assertEquals("Ivanov", employeeResponseDto.surname());
         assertEquals("2007-12-03", employeeResponseDto.birthDate().toString());
-        assertEquals("+71234567890", employeeResponseDto.phones().get(0).phoneNumber());
+        assertEquals("71234567890", employeeResponseDto.phones().get(0).phoneNumber());
     }
 
     @Test

@@ -4,6 +4,7 @@ import com.study.microservices.employeeservice.dao.EmployeeEntityDao;
 import com.study.microservices.employeeservice.exception.EmployeeFoundException;
 import com.study.microservices.employeeservice.exception.EmployeeNotFoundException;
 import com.study.microservices.employeeservice.model.dto.EmployeeCreateRequestDto;
+import com.study.microservices.employeeservice.model.dto.EmployeePassport;
 import com.study.microservices.employeeservice.model.dto.EmployeePhone;
 import com.study.microservices.employeeservice.model.dto.EmployeeResponseDto;
 import com.study.microservices.employeeservice.model.entity.EmployeeEntity;
@@ -37,14 +38,14 @@ public class EmployeeService {
     @Transactional(readOnly = true)
     public List<EmployeeResponseDto> getAllEmployees() {
         // with DAO
-        return employeeEntityDao.findAll().stream()
-                .map(this::getEmployeeResponseDtoFromEntity)
-                .toList();
+//        return employeeEntityDao.findAll().stream()
+//                .map(this::getEmployeeResponseDtoFromEntity)
+//                .toList();
 
         // with employeeRepository
-       /* return employeeRepository.findAll().stream()
+        return employeeRepository.findAll().stream()
                 .map(this::getEmployeeResponseDtoFromEntity)
-                .toList();*/
+                .toList();
     }
 
     @Transactional(readOnly = true)
@@ -98,7 +99,6 @@ public class EmployeeService {
         return employeeResponseDto;
     }
 
-    //todo: check if possible to get all employee phone numbers in single SQL
     @Transactional(readOnly = true)
     public EmployeeResponseDto findEmployeeByPhoneNumber(String phoneNumber) {
         val employeeEntity = employeeRepository.findByPhoneNumber(phoneNumber)
@@ -116,6 +116,10 @@ public class EmployeeService {
                 .name(employeeEntity.getName())
                 .surname(employeeEntity.getSurname())
                 .birthDate(employeeEntity.getBirthDate())
+                .passport(EmployeePassport.builder()
+                        .passportNumber(employeeEntity.getPassport().getPassportNumber())
+                        .registrationAddress(employeeEntity.getPassport().getRegistrationAddress())
+                        .build())
                 .phones(employeeEntity.getPhones().stream()
                         .map(employeePhoneEntity -> EmployeePhone.builder()
                                 .phoneNumber(employeePhoneEntity.getPhoneNumber())

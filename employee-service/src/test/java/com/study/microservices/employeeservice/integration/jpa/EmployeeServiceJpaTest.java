@@ -37,16 +37,17 @@ public class EmployeeServiceJpaTest {
         Optional<EmployeeEntity> optionalEmployee = employeeRepository.findByNameAndSurname("Alex", "Ivanov");
 
         assertTrue(optionalEmployee.isPresent());
-        val employeeEntity = optionalEmployee.get();
-        assertThat(employeeEntity.getPhones().size()).isEqualTo(1);
-        assertEquals(employeeEntityToSave.getName(), employeeEntity.getName());
-        assertEquals(employeeEntityToSave.getSurname(), employeeEntity.getSurname());
+        val savedEmployeeEntity = optionalEmployee.get();
+        assertThat(savedEmployeeEntity.getPhones().size()).isEqualTo(1);
+        assertEquals(employeeEntityToSave.getPassport().getPassportNumber(), savedEmployeeEntity.getPassport().getPassportNumber());
+        assertEquals(employeeEntityToSave.getName(), savedEmployeeEntity.getName());
+        assertEquals(employeeEntityToSave.getSurname(), savedEmployeeEntity.getSurname());
 
-        assertNotNull(employeeEntity.getId());
-        assertNotNull(employeeEntity.getCreatedOn());
-        assertNotNull(employeeEntity.getUpdatedOn());
-        assertNull(employeeEntity.getCreatedBy());
-        assertNull(employeeEntity.getUpdatedBy());
+        assertNotNull(savedEmployeeEntity.getId());
+        assertNotNull(savedEmployeeEntity.getCreatedOn());
+        assertNotNull(savedEmployeeEntity.getUpdatedOn());
+        assertNull(savedEmployeeEntity.getCreatedBy());
+        assertNull(savedEmployeeEntity.getUpdatedBy());
     }
 
     @Test

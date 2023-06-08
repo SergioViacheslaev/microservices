@@ -12,5 +12,6 @@ public record EmployeeResponseDto(
         String name,
         String surname,
         LocalDate birthDate,
+        EmployeePassport passport,
         List<EmployeePhone> phones) {
 }

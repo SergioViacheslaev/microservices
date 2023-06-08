@@ -59,6 +59,7 @@ public class EmployeeController {
     @Operation(summary = "Find Employee by phone number", description = "Find Employee by phone number")
     @GetMapping(path = "/phones/{phoneNumber}")
     public ResponseEntity<EmployeeResponseDto> findEmployeeByPhoneNumber(@PathVariable String phoneNumber) {
+        log.info("Received findEmployeeByPhoneNumber {} request", phoneNumber);
         return new ResponseEntity<>(employeeService.findEmployeeByPhoneNumber(phoneNumber), HttpStatus.OK);
     }
 }
