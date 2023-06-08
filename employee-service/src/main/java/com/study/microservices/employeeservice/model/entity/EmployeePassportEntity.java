@@ -11,7 +11,9 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.UUID;
 
@@ -36,6 +38,8 @@ public class EmployeePassportEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "employee_id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private EmployeeEntity employee;
 
 }

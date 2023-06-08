@@ -18,15 +18,14 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 import static jakarta.persistence.CascadeType.ALL;
+import static java.util.Objects.isNull;
 
 @Entity
 @Data
@@ -53,20 +52,30 @@ public class EmployeeEntity extends AuditedEntity {
 
     @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn
-    @ToString.Exclude
     @Getter(AccessLevel.NONE)
     private EmployeePassportEntity passport;
 
     @OneToMany(cascade = ALL, mappedBy = "employee", fetch = FetchType.LAZY)
-    @ToString.Exclude
     @Getter(AccessLevel.NONE)
     private List<EmployeePhoneEntity> phones;
 
+    /**
+     * In bidirectional association:
+     * 1. For each Phone adds Employee (ManyToOne)
+     * 2. For Employee adds Phones (OneToMany)
+     *
+     * @param phones Entities
+     */
+    public void addPhones(List<EmployeePhoneEntity> phones) {
+        phones.forEach(employeePhoneEntity -> employeePhoneEntity.setEmployee(this));
+        this.setPhones(phones);
+    }
+
     public EmployeePassportEntity getPassport() {
-        return Objects.isNull(passport) ? EmployeePassportEntity.builder().build() : passport;
+        return isNull(passport) ? EmployeePassportEntity.builder().build() : passport;
     }
 
     public List<EmployeePhoneEntity> getPhones() {
-        return Objects.isNull(phones) ? Collections.emptyList() : phones;
+        return isNull(phones) ? Collections.emptyList() : phones;
     }
 }

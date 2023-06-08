@@ -1,3 +1,6 @@
+-- Shared Primary Key strategy:
+-- employeeId is a primary key and foreign key
+
 CREATE TABLE IF NOT EXISTS employee_passports
 (
     employee_id          uuid PRIMARY KEY NOT NULL,

@@ -76,25 +76,31 @@ public class EmployeeService {
                             String.format("Employee with name %s, surname %s already exists", employeeName, employeeSurname));
                 });
 
-        final EmployeeEntity employeeEntityToSave = EmployeeEntity.builder()
+        final EmployeeEntity employeeToSave = EmployeeEntity.builder()
                 .name(employeeName)
                 .surname(employeeSurname)
                 .birthDate(employeeCreateRequestDto.birthDate())
                 .build();
 
-        final List<EmployeePhoneEntity> employeePhoneEntitiesToSave = employeeCreateRequestDto.phones().stream()
+        final List<EmployeePhoneEntity> employeePhonesToSave = employeeCreateRequestDto.phones().stream()
                 .map(employeePhone -> EmployeePhoneEntity.builder()
                         .phoneNumber(employeePhone.phoneNumber())
                         .build())
                 .toList();
 
-        employeeEntityToSave.setPhones(employeePhoneEntitiesToSave);
-        employeePhoneEntitiesToSave.forEach(employeePhoneEntity -> employeePhoneEntity.setEmployee(employeeEntityToSave));
+        employeeToSave.addPhones(employeePhonesToSave);
 
-        val savedEmployeeEntity = employeeRepository.save(employeeEntityToSave);
+        val savedEmployeeEntity = employeeRepository.save(employeeToSave);
         val employeeResponseDto = getEmployeeResponseDtoFromEntity(savedEmployeeEntity);
 
         log.info("Saved EmployeeEntity {}", employeeResponseDto);
+
+        EmployeePhoneEntity employeePhoneEntity1 = savedEmployeeEntity.getPhones().get(0);
+        EmployeePhoneEntity employeePhoneEntity2 = EmployeePhoneEntity.builder()
+                .phoneNumber("42342")
+                .build();
+        boolean equals = employeePhoneEntity1.equals(employeePhoneEntity2);
+        System.out.println(equals);
 
         return employeeResponseDto;
     }
