@@ -1,20 +1,17 @@
 package com.study.microservices.employeeservice.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "employee_departments")
+@Table(name = "departments")
 public class EmployeeDepartmentEntity {
 
     @Id
@@ -23,5 +20,13 @@ public class EmployeeDepartmentEntity {
 
     @Column(name = "department_name")
     private String departmentName;
+
+    @ManyToMany
+    @JoinTable(name = "employees_departments",
+            joinColumns = @JoinColumn(name = "department_id"),
+            inverseJoinColumns = @JoinColumn(name = "employee_id"))
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private List<EmployeeEntity> employees;
 
 }

@@ -4,6 +4,8 @@ import com.study.microservices.employeeservice.model.dto.EmployeeCreateRequestDt
 import com.study.microservices.employeeservice.model.dto.EmployeeResponseDto;
 import com.study.microservices.employeeservice.service.EmployeeService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -58,7 +60,9 @@ public class EmployeeController {
 
     @Operation(summary = "Find Employee by phone number", description = "Find Employee by phone number")
     @GetMapping(path = "/phones/{phoneNumber}")
-    public ResponseEntity<EmployeeResponseDto> findEmployeeByPhoneNumber(@PathVariable String phoneNumber) {
+    public ResponseEntity<EmployeeResponseDto> findEmployeeByPhoneNumber(
+            @Parameter(description = "Searched employee's phone number", schema = @Schema(defaultValue = "792112345671"))
+            @PathVariable String phoneNumber) {
         log.info("Received findEmployeeByPhoneNumber {} request", phoneNumber);
         return new ResponseEntity<>(employeeService.findEmployeeByPhoneNumber(phoneNumber), HttpStatus.OK);
     }

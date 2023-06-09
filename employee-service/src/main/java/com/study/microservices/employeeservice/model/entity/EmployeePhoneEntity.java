@@ -22,7 +22,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-@Table(name = "employee_phones")
+@Table(name = "phones")
 public class EmployeePhoneEntity {
 
     @Id

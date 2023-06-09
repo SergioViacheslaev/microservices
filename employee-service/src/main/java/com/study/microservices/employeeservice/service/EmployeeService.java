@@ -4,6 +4,7 @@ import com.study.microservices.employeeservice.dao.EmployeeEntityDao;
 import com.study.microservices.employeeservice.exception.EmployeeFoundException;
 import com.study.microservices.employeeservice.exception.EmployeeNotFoundException;
 import com.study.microservices.employeeservice.model.dto.EmployeeCreateRequestDto;
+import com.study.microservices.employeeservice.model.dto.EmployeeDepartment;
 import com.study.microservices.employeeservice.model.dto.EmployeePassport;
 import com.study.microservices.employeeservice.model.dto.EmployeePhone;
 import com.study.microservices.employeeservice.model.dto.EmployeeResponseDto;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -131,6 +133,11 @@ public class EmployeeService {
                                 .phoneNumber(employeePhoneEntity.getPhoneNumber())
                                 .build()).toList()
                 )
+                .departments(employeeEntity.getDepartments().stream()
+                        .map(employeeDepartmentEntity -> EmployeeDepartment.builder()
+                                .departmentName(employeeDepartmentEntity.getDepartmentName())
+                                .build())
+                        .collect(Collectors.toSet()))
                 .build();
     }
 }
