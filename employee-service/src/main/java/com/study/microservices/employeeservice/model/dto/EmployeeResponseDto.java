@@ -4,7 +4,6 @@ import lombok.Builder;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Builder
@@ -15,5 +14,5 @@ public record EmployeeResponseDto(
         LocalDate birthDate,
         EmployeePassport passport,
         List<EmployeePhone> phones,
-        Set<EmployeeDepartment> departments) {
+        List<EmployeeDepartment> departments) {
 }

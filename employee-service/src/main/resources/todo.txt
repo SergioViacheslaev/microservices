@@ -1,4 +1,4 @@
 0. Add request Dto validations
 1. Use MapStruct entity->Dto
 2. Add audit CREATED_BY, UPDATED_BY, CREATED_ON, UPDATED_ON
-3. Optimize findAll SQL, fix n+1 problem
+3. POST Create Employee, add all fields in Dto

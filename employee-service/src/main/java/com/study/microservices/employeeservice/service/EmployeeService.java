@@ -8,6 +8,7 @@ import com.study.microservices.employeeservice.model.dto.EmployeeDepartment;
 import com.study.microservices.employeeservice.model.dto.EmployeePassport;
 import com.study.microservices.employeeservice.model.dto.EmployeePhone;
 import com.study.microservices.employeeservice.model.dto.EmployeeResponseDto;
+import com.study.microservices.employeeservice.model.entity.EmployeeDepartmentEntity;
 import com.study.microservices.employeeservice.model.entity.EmployeeEntity;
 import com.study.microservices.employeeservice.model.entity.EmployeePhoneEntity;
 import com.study.microservices.employeeservice.repo.EmployeeRepository;
@@ -20,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -39,13 +42,17 @@ public class EmployeeService {
 
     @Transactional(readOnly = true)
     public List<EmployeeResponseDto> getAllEmployees() {
-        // with DAO
-//        return employeeEntityDao.findAll().stream()
-//                .map(this::getEmployeeResponseDtoFromEntity)
-//                .toList();
+        val employeeEntities = employeeRepository.findAllWithPassportAndPhones();
+        final Map<UUID, List<String>> employeeIdAndDepartmentNames = employeeRepository.findAllWithDepartments().stream()
+                .collect(Collectors.toMap(EmployeeEntity::getId, employeeEntity ->
+                        employeeEntity.getDepartments().stream()
+                                .map(EmployeeDepartmentEntity::getDepartmentName)
+                                .toList()));
 
-        // with employeeRepository
-        return employeeRepository.findAll().stream()
+        System.out.println();
+
+        return employeeEntities
+                .stream()
                 .map(this::getEmployeeResponseDtoFromEntity)
                 .toList();
     }
@@ -97,13 +104,6 @@ public class EmployeeService {
 
         log.info("Saved EmployeeEntity {}", employeeResponseDto);
 
-        EmployeePhoneEntity employeePhoneEntity1 = savedEmployeeEntity.getPhones().get(0);
-        EmployeePhoneEntity employeePhoneEntity2 = EmployeePhoneEntity.builder()
-                .phoneNumber("42342")
-                .build();
-        boolean equals = employeePhoneEntity1.equals(employeePhoneEntity2);
-        System.out.println(equals);
-
         return employeeResponseDto;
     }
 
@@ -116,6 +116,33 @@ public class EmployeeService {
         log.info("Found employeeEntity {}", employeeEntity);
 
         return getEmployeeResponseDtoFromEntity(employeeEntity);
+    }
+
+    private List<EmployeeResponseDto> getEmployeesWithDepartmentsResponseDto(List<EmployeeEntity> employeeEntities,
+                                                                             Map<UUID, List<String>> employeeIdAndDepartmentNames) {
+        return employeeEntities
+                .stream()
+                .map(employeeEntity -> EmployeeResponseDto.builder()
+                        .Id(employeeEntity.getId())
+                        .name(employeeEntity.getName())
+                        .surname(employeeEntity.getSurname())
+                        .birthDate(employeeEntity.getBirthDate())
+                        .passport(EmployeePassport.builder()
+                                .passportNumber(employeeEntity.getPassport().getPassportNumber())
+                                .registrationAddress(employeeEntity.getPassport().getRegistrationAddress())
+                                .build())
+                        .phones(employeeEntity.getPhones().stream()
+                                .map(employeePhoneEntity -> EmployeePhone.builder()
+                                        .phoneNumber(employeePhoneEntity.getPhoneNumber())
+                                        .build()).toList()
+                        )
+                        .departments(employeeIdAndDepartmentNames.get(employeeEntity.getId())
+                                .stream().map(departmentName -> EmployeeDepartment.builder()
+                                        .departmentName(departmentName)
+                                        .build())
+                                .toList())
+                        .build())
+                .toList();
     }
 
     private EmployeeResponseDto getEmployeeResponseDtoFromEntity(EmployeeEntity employeeEntity) {
@@ -137,7 +164,7 @@ public class EmployeeService {
                         .map(employeeDepartmentEntity -> EmployeeDepartment.builder()
                                 .departmentName(employeeDepartmentEntity.getDepartmentName())
                                 .build())
-                        .collect(Collectors.toSet()))
+                        .collect(Collectors.toList()))
                 .build();
     }
 }
