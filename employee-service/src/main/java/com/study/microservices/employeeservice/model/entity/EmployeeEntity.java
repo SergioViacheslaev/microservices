@@ -21,6 +21,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 
@@ -65,7 +67,8 @@ public class EmployeeEntity extends AuditedEntity {
     @Getter(AccessLevel.NONE)
     private List<EmployeePhoneEntity> phones;
 
-    @ManyToMany()
+    @ManyToMany(fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SUBSELECT) // fixes N+1 problem, first select all departments, then joins with all fetched employees
     @JoinTable(name = "employees_departments",
             joinColumns = @JoinColumn(name = "employee_id"),
             inverseJoinColumns = @JoinColumn(name = "department_id"))

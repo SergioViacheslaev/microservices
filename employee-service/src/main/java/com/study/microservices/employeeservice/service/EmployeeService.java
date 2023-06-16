@@ -43,16 +43,15 @@ public class EmployeeService {
     @Transactional(readOnly = true)
     public List<EmployeeResponseDto> getAllEmployees() {
         val employeeEntities = employeeRepository.findAllWithPassportAndPhones();
-        final Map<UUID, List<String>> employeeIdAndDepartmentNames = employeeRepository.findAllWithDepartments().stream()
-                .collect(Collectors.toMap(EmployeeEntity::getId, employeeEntity ->
-                        employeeEntity.getDepartments().stream()
-                                .map(EmployeeDepartmentEntity::getDepartmentName)
-                                .toList()));
+//        final Map<UUID, List<String>> employeeIdAndDepartmentNames = employeeRepository.findAllWithDepartments().stream()
+//                .collect(Collectors.toMap(EmployeeEntity::getId, employeeEntity ->
+//                        employeeEntity.getDepartments().stream()
+//                                .map(EmployeeDepartmentEntity::getDepartmentName)
+//                                .toList()));
 
-        System.out.println();
+//        return getEmployeesWithDepartmentsResponseDto(employeeEntities, employeeIdAndDepartmentNames);
 
-        return employeeEntities
-                .stream()
+        return employeeEntities.stream()
                 .map(this::getEmployeeResponseDtoFromEntity)
                 .toList();
     }
