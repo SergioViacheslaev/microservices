@@ -1,5 +1,6 @@
 package com.study.microservices.employeeservice.objects_utils;
 
+import com.study.microservices.employeeservice.model.dto.EmployeeCreateRequestDto;
 import com.study.microservices.employeeservice.model.dto.EmployeePhone;
 import com.study.microservices.employeeservice.model.dto.EmployeeResponseDto;
 import com.study.microservices.employeeservice.model.entity.EmployeeEntity;
@@ -35,6 +36,17 @@ public class EmployeeTestDataUtils {
         employeePhoneEntities.forEach(employeePhoneEntity -> employeePhoneEntity.setEmployee(employeeEntity));
 
         return employeeEntity;
+    }
+
+    public static EmployeeCreateRequestDto createEmployeeRequestDto() {
+        return EmployeeCreateRequestDto.builder()
+                .name("Foo")
+                .surname("Bar")
+                .birthDate(LocalDate.of(1987, 1, 15))
+                .phones(List.of(EmployeePhone.builder()
+                        .phoneNumber("71234567890")
+                        .build()))
+                .build();
     }
 
     public static EmployeeResponseDto createEmployeeResponseDto(EmployeeEntity employeeEntity) {
