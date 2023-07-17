@@ -23,8 +23,13 @@ public record EmployeeCreateRequestDto(
         String surname,
 
         @Past(message = "Дата рождения должна быть в прошедшем времени")
+        @NotNull
         @JsonDeserialize(using = EmployeeBirthDateDeserializer.class)
         LocalDate birthDate,
+
+        @NotNull
+        @Valid
+        EmployeePassport passport,
 
         @NotNull
         @Size(min = 1, message = "Должен быть указан хотябы один телефон сотрудника")

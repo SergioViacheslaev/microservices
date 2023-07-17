@@ -1,2 +1,48 @@
 1. Spring Boot 3.0 will be the first version of Spring Boot that makes use of Jakarta EE 9 APIs (jakarta.) instead of EE 8 (javax.)
 2. Please note that springdoc-openapi-ui now changed to springdoc-openapi-starter-webmvc-ui from spring boot 3.
+
+
+
+
+
+/** Solution to get all Employees with departments by two sql queries:
+    1. select all departments by employee id
+    2. merge with employees
+ **/
+
+       final Map<UUID, List<String>> employeeIdAndDepartmentNames = employeeRepository.findAllWithDepartments().stream()
+                .collect(Collectors.toMap(EmployeeEntity::getId, employeeEntity ->
+                        employeeEntity.getDepartments().stream()
+                                .map(EmployeeDepartmentEntity::getDepartmentName)
+                                .toList()));
+
+        return getEmployeesWithDepartmentsResponseDto(employeeEntities, employeeIdAndDepartmentNames);
+
+
+  private List<EmployeeResponseDto> getEmployeesWithDepartmentsResponseDto(List<EmployeeEntity> employeeEntities,
+                                                                             Map<UUID, List<String>> employeeIdAndDepartmentNames) {
+        return employeeEntities
+                .stream()
+                .map(employeeEntity -> EmployeeResponseDto.builder()
+                        .Id(employeeEntity.getId())
+                        .name(employeeEntity.getName())
+                        .surname(employeeEntity.getSurname())
+                        .birthDate(employeeEntity.getBirthDate())
+                        .passport(EmployeePassport.builder()
+                                .passportNumber(employeeEntity.getPassport().getPassportNumber())
+                                .registrationAddress(employeeEntity.getPassport().getRegistrationAddress())
+                                .build())
+                        .phones(employeeEntity.getPhones().stream()
+                                .map(employeePhoneEntity -> EmployeePhoneDto.builder()
+                                        .phoneNumber(employeePhoneEntity.getPhoneNumber())
+                                        .phoneType(employeePhoneEntity.getPhoneType().getName())
+                                        .build()).toList()
+                        )
+                        .departments(employeeIdAndDepartmentNames.get(employeeEntity.getId())
+                                .stream().map(departmentName -> EmployeeDepartment.builder()
+                                        .departmentName(departmentName)
+                                        .build())
+                                .toList())
+                        .build())
+                .toList();
+    }

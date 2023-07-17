@@ -3,14 +3,17 @@ package com.study.microservices.employeeservice.model.dto;
 import com.study.microservices.employeeservice.exception.EmployeePhoneTypeFormatException;
 
 import java.util.Map;
+import java.util.stream.Stream;
+
+import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.toMap;
 
 public enum PhoneType {
     WORK("Рабочий"),
     HOME("Домашний");
 
-    private static final Map<String, PhoneType> phoneTypeNames = Map.of(
-            WORK.name, WORK,
-            HOME.name, HOME);
+    private static final Map<String, PhoneType> phoneTypeNames = Stream.of(PhoneType.values())
+            .collect(toMap(PhoneType::getName, identity()));
 
     private final String name;
 
@@ -18,10 +21,10 @@ public enum PhoneType {
         this.name = name;
     }
 
-    public static PhoneType getPhoneTypeFromString(String type) {
-        PhoneType phoneType = phoneTypeNames.get(type);
+    public static PhoneType getPhoneTypeFromString(String typeName) {
+        PhoneType phoneType = phoneTypeNames.get(typeName);
         if (phoneType == null) {
-            throw new EmployeePhoneTypeFormatException(String.format("Указан несуществующий тип телефона: %s", type));
+            throw new EmployeePhoneTypeFormatException(String.format("Указан несуществующий тип телефона: %s", typeName));
         }
         return phoneType;
     }

@@ -1,11 +1,16 @@
 package com.study.microservices.employeeservice.service;
 
-import com.study.microservices.employeeservice.dao.EmployeeEntityDao;
 import com.study.microservices.employeeservice.exception.EmployeeFoundException;
 import com.study.microservices.employeeservice.exception.EmployeeNotFoundException;
 import com.study.microservices.employeeservice.exception.EmployeePhoneFoundException;
-import com.study.microservices.employeeservice.model.dto.*;
+import com.study.microservices.employeeservice.model.dto.EmployeeCreateRequestDto;
+import com.study.microservices.employeeservice.model.dto.EmployeeDepartment;
+import com.study.microservices.employeeservice.model.dto.EmployeePassport;
+import com.study.microservices.employeeservice.model.dto.EmployeePhoneDto;
+import com.study.microservices.employeeservice.model.dto.EmployeeResponseDto;
+import com.study.microservices.employeeservice.model.dto.PhoneType;
 import com.study.microservices.employeeservice.model.entity.EmployeeEntity;
+import com.study.microservices.employeeservice.model.entity.EmployeePassportEntity;
 import com.study.microservices.employeeservice.model.entity.EmployeePhoneEntity;
 import com.study.microservices.employeeservice.repo.EmployeePhoneRepository;
 import com.study.microservices.employeeservice.repo.EmployeeRepository;
@@ -18,8 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -28,28 +31,17 @@ public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
     private final EmployeePhoneRepository employeePhoneRepository;
-    private final EmployeeEntityDao employeeEntityDao;
 
     public EmployeeService(EmployeeRepository employeeRepository,
-                           EmployeePhoneRepository employeePhoneRepository,
-//                           @Qualifier(value = "employeeEntityJdbcTemplateDao")
-//                           @Qualifier(value = "employeeEntityHibernateDao")
-                           EmployeeEntityDao employeeEntityDao) {
+                           EmployeePhoneRepository employeePhoneRepository
+    ) {
         this.employeeRepository = employeeRepository;
         this.employeePhoneRepository = employeePhoneRepository;
-        this.employeeEntityDao = employeeEntityDao;
     }
 
     @Transactional(readOnly = true)
     public List<EmployeeResponseDto> getAllEmployees() {
         val employeeEntities = employeeRepository.findAllWithPassportAndPhones();
-//        final Map<UUID, List<String>> employeeIdAndDepartmentNames = employeeRepository.findAllWithDepartments().stream()
-//                .collect(Collectors.toMap(EmployeeEntity::getId, employeeEntity ->
-//                        employeeEntity.getDepartments().stream()
-//                                .map(EmployeeDepartmentEntity::getDepartmentName)
-//                                .toList()));
-
-//        return getEmployeesWithDepartmentsResponseDto(employeeEntities, employeeIdAndDepartmentNames);
 
         return employeeEntities.stream()
                 .map(this::getEmployeeResponseDtoFromEntity)
@@ -84,6 +76,12 @@ public class EmployeeService {
                 .birthDate(employeeCreateRequestDto.birthDate())
                 .build();
 
+        final EmployeePassportEntity employeePassportEntity = EmployeePassportEntity.builder()
+                .passportNumber(Long.valueOf(employeeCreateRequestDto.passport().passportNumber()))
+                .registrationAddress(employeeCreateRequestDto.passport().registrationAddress())
+                .build();
+        employeePassportEntity.setEmployee(employeeToSave);
+
         final List<EmployeePhoneEntity> employeePhonesToSave = employeeCreateRequestDto.phones().stream()
                 .map(employeePhone -> EmployeePhoneEntity.builder()
                         .phoneNumber(employeePhone.phoneNumber())
@@ -91,6 +89,7 @@ public class EmployeeService {
                         .build())
                 .toList();
 
+        employeeToSave.setPassport(employeePassportEntity);
         employeeToSave.addPhones(employeePhonesToSave);
 
         val savedEmployeeEntity = employeeRepository.save(employeeToSave);
@@ -112,42 +111,15 @@ public class EmployeeService {
         return getEmployeeResponseDtoFromEntity(employeeEntity);
     }
 
-    private List<EmployeeResponseDto> getEmployeesWithDepartmentsResponseDto(List<EmployeeEntity> employeeEntities,
-                                                                             Map<UUID, List<String>> employeeIdAndDepartmentNames) {
-        return employeeEntities
-                .stream()
-                .map(employeeEntity -> EmployeeResponseDto.builder()
-                        .Id(employeeEntity.getId())
-                        .name(employeeEntity.getName())
-                        .surname(employeeEntity.getSurname())
-                        .birthDate(employeeEntity.getBirthDate())
-                        .passport(EmployeePassport.builder()
-                                .passportNumber(employeeEntity.getPassport().getPassportNumber())
-                                .registrationAddress(employeeEntity.getPassport().getRegistrationAddress())
-                                .build())
-                        .phones(employeeEntity.getPhones().stream()
-                                .map(employeePhoneEntity -> EmployeePhoneDto.builder()
-                                        .phoneNumber(employeePhoneEntity.getPhoneNumber())
-                                        .phoneType(employeePhoneEntity.getPhoneType().getName())
-                                        .build()).toList()
-                        )
-                        .departments(employeeIdAndDepartmentNames.get(employeeEntity.getId())
-                                .stream().map(departmentName -> EmployeeDepartment.builder()
-                                        .departmentName(departmentName)
-                                        .build())
-                                .toList())
-                        .build())
-                .toList();
-    }
-
     private EmployeeResponseDto getEmployeeResponseDtoFromEntity(EmployeeEntity employeeEntity) {
+
         return EmployeeResponseDto.builder()
                 .Id(employeeEntity.getId())
                 .name(employeeEntity.getName())
                 .surname(employeeEntity.getSurname())
                 .birthDate(employeeEntity.getBirthDate())
                 .passport(EmployeePassport.builder()
-                        .passportNumber(employeeEntity.getPassport().getPassportNumber())
+                        .passportNumber(String.valueOf(employeeEntity.getPassport().getPassportNumber()))
                         .registrationAddress(employeeEntity.getPassport().getRegistrationAddress())
                         .build())
                 .phones(employeeEntity.getPhones().stream()

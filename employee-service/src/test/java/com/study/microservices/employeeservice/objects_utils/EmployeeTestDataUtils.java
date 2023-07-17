@@ -1,9 +1,6 @@
 package com.study.microservices.employeeservice.objects_utils;
 
-import com.study.microservices.employeeservice.model.dto.EmployeeCreateRequestDto;
-import com.study.microservices.employeeservice.model.dto.EmployeePhoneDto;
-import com.study.microservices.employeeservice.model.dto.EmployeeResponseDto;
-import com.study.microservices.employeeservice.model.dto.PhoneType;
+import com.study.microservices.employeeservice.model.dto.*;
 import com.study.microservices.employeeservice.model.entity.EmployeeEntity;
 import com.study.microservices.employeeservice.model.entity.EmployeePassportEntity;
 import com.study.microservices.employeeservice.model.entity.EmployeePhoneEntity;
@@ -45,6 +42,10 @@ public class EmployeeTestDataUtils {
                 .name("Foo")
                 .surname("Bar")
                 .birthDate(LocalDate.of(1987, 1, 15))
+                .passport(EmployeePassport.builder()
+                        .passportNumber("1234567890")
+                        .registrationAddress("FooBar")
+                        .build())
                 .phones(List.of(EmployeePhoneDto.builder()
                         .phoneNumber("71234567890")
                         .phoneType("Рабочий")

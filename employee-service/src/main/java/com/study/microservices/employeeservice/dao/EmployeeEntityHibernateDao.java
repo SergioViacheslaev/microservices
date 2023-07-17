@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
+//@Service
 @Primary
 @Slf4j
 @RequiredArgsConstructor

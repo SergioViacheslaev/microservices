@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 //@Primary
-@Service
+//@Service
 @Slf4j
 @RequiredArgsConstructor
 public class EmployeeEntityJdbcTemplateDao implements EmployeeEntityDao {
