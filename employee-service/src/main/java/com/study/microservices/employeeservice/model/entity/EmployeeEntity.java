@@ -77,8 +77,8 @@ public class EmployeeEntity extends AuditedEntity {
 
     /**
      * In bidirectional association:
-     * 1. For each Phone adds Employee (ManyToOne)
-     * 2. For Employee adds Phones (OneToMany)
+     * 1. For each Phone add Employee (ManyToOne)
+     * 2. For Employee add Phones (OneToMany)
      *
      * @param phones entities
      */

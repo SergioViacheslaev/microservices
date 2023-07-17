@@ -4,9 +4,10 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 
 @Builder
-public record EmployeePhone(
+public record EmployeePhoneDto(
         @NotBlank(message = "Телефон сотрудника не может быть пустым")
         String phoneNumber,
 
-        PhoneType phoneType) {
+        @NotBlank(message = "Тип телефона не может быть пустым")
+        String phoneType) {
 }

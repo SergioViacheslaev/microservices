@@ -28,5 +28,5 @@ public record EmployeeCreateRequestDto(
 
         @NotNull
         @Size(min = 1, message = "Должен быть указан хотябы один телефон сотрудника")
-        List<@Valid EmployeePhone> phones) {
+        List<@Valid EmployeePhoneDto> phones) {
 }

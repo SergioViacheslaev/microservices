@@ -24,9 +24,9 @@ VALUES ('b16355a9-3edf-418d-bafc-52e46f6703e1',
         'Testov',
         '2005-09-11');
 
-INSERT INTO phones (employee_id, phone_number)
-VALUES ('b16355a9-3edf-418d-bafc-52e46f6703e1', '792112345671'),
-       ('b16355a9-3edf-418d-bafc-52e46f6703e1', '796598387472');
+INSERT INTO phones (employee_id, phone_number, phone_type)
+VALUES ('b16355a9-3edf-418d-bafc-52e46f6703e1', '792112345671', 'WORK'),
+       ('b16355a9-3edf-418d-bafc-52e46f6703e1', '796598387472', 'HOME');
 
 INSERT INTO passports (employee_id, passport_number, registration_address)
 VALUES ('b16355a9-3edf-418d-bafc-52e46f6703e1', 123456789, 'Улица Пушкина, дом Колотушкина');

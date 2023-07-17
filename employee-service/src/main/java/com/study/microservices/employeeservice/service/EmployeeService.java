@@ -3,14 +3,11 @@ package com.study.microservices.employeeservice.service;
 import com.study.microservices.employeeservice.dao.EmployeeEntityDao;
 import com.study.microservices.employeeservice.exception.EmployeeFoundException;
 import com.study.microservices.employeeservice.exception.EmployeeNotFoundException;
-import com.study.microservices.employeeservice.model.dto.EmployeeCreateRequestDto;
-import com.study.microservices.employeeservice.model.dto.EmployeeDepartment;
-import com.study.microservices.employeeservice.model.dto.EmployeePassport;
-import com.study.microservices.employeeservice.model.dto.EmployeePhone;
-import com.study.microservices.employeeservice.model.dto.EmployeeResponseDto;
-import com.study.microservices.employeeservice.model.entity.EmployeeDepartmentEntity;
+import com.study.microservices.employeeservice.exception.EmployeePhoneFoundException;
+import com.study.microservices.employeeservice.model.dto.*;
 import com.study.microservices.employeeservice.model.entity.EmployeeEntity;
 import com.study.microservices.employeeservice.model.entity.EmployeePhoneEntity;
+import com.study.microservices.employeeservice.repo.EmployeePhoneRepository;
 import com.study.microservices.employeeservice.repo.EmployeeRepository;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -30,13 +27,16 @@ import java.util.stream.Collectors;
 public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
+    private final EmployeePhoneRepository employeePhoneRepository;
     private final EmployeeEntityDao employeeEntityDao;
 
     public EmployeeService(EmployeeRepository employeeRepository,
+                           EmployeePhoneRepository employeePhoneRepository,
 //                           @Qualifier(value = "employeeEntityJdbcTemplateDao")
 //                           @Qualifier(value = "employeeEntityHibernateDao")
                            EmployeeEntityDao employeeEntityDao) {
         this.employeeRepository = employeeRepository;
+        this.employeePhoneRepository = employeePhoneRepository;
         this.employeeEntityDao = employeeEntityDao;
     }
 
@@ -76,23 +76,18 @@ public class EmployeeService {
 
     @Transactional
     public EmployeeResponseDto createEmployee(EmployeeCreateRequestDto employeeCreateRequestDto) {
-        val employeeName = employeeCreateRequestDto.name();
-        val employeeSurname = employeeCreateRequestDto.surname();
-        employeeRepository.findByNameAndSurname(employeeName, employeeSurname)
-                .ifPresent(employee -> {
-                    throw new EmployeeFoundException(
-                            String.format("Employee with name %s, surname %s already exists", employeeName, employeeSurname));
-                });
+        validateEmployeeCreateRequestDto(employeeCreateRequestDto);
 
         final EmployeeEntity employeeToSave = EmployeeEntity.builder()
-                .name(employeeName)
-                .surname(employeeSurname)
+                .name(employeeCreateRequestDto.name())
+                .surname(employeeCreateRequestDto.surname())
                 .birthDate(employeeCreateRequestDto.birthDate())
                 .build();
 
         final List<EmployeePhoneEntity> employeePhonesToSave = employeeCreateRequestDto.phones().stream()
                 .map(employeePhone -> EmployeePhoneEntity.builder()
                         .phoneNumber(employeePhone.phoneNumber())
+                        .phoneType(PhoneType.getPhoneTypeFromString(employeePhone.phoneType()))
                         .build())
                 .toList();
 
@@ -131,8 +126,9 @@ public class EmployeeService {
                                 .registrationAddress(employeeEntity.getPassport().getRegistrationAddress())
                                 .build())
                         .phones(employeeEntity.getPhones().stream()
-                                .map(employeePhoneEntity -> EmployeePhone.builder()
+                                .map(employeePhoneEntity -> EmployeePhoneDto.builder()
                                         .phoneNumber(employeePhoneEntity.getPhoneNumber())
+                                        .phoneType(employeePhoneEntity.getPhoneType().getName())
                                         .build()).toList()
                         )
                         .departments(employeeIdAndDepartmentNames.get(employeeEntity.getId())
@@ -155,8 +151,9 @@ public class EmployeeService {
                         .registrationAddress(employeeEntity.getPassport().getRegistrationAddress())
                         .build())
                 .phones(employeeEntity.getPhones().stream()
-                        .map(employeePhoneEntity -> EmployeePhone.builder()
+                        .map(employeePhoneEntity -> EmployeePhoneDto.builder()
                                 .phoneNumber(employeePhoneEntity.getPhoneNumber())
+                                .phoneType(employeePhoneEntity.getPhoneType().getName())
                                 .build()).toList()
                 )
                 .departments(employeeEntity.getDepartments().stream()
@@ -165,5 +162,27 @@ public class EmployeeService {
                                 .build())
                         .collect(Collectors.toList()))
                 .build();
+    }
+
+    private void validateEmployeeCreateRequestDto(EmployeeCreateRequestDto employeeCreateRequestDto) {
+        val employeeName = employeeCreateRequestDto.name();
+        val employeeSurname = employeeCreateRequestDto.surname();
+
+        employeeRepository.findByNameAndSurname(employeeName, employeeSurname)
+                .ifPresent(employee -> {
+                    throw new EmployeeFoundException(
+                            String.format("Employee with name %s, surname %s already exists", employeeName, employeeSurname));
+                });
+
+        employeeCreateRequestDto.phones().forEach(phoneDto -> {
+            PhoneType.getPhoneTypeFromString(phoneDto.phoneType());
+
+            if (employeePhoneRepository.existsByPhoneNumber(phoneDto.phoneNumber())) {
+                throw new EmployeePhoneFoundException(
+                        String.format("This phone number %s is already exists", phoneDto.phoneNumber()));
+            }
+
+        });
+
     }
 }

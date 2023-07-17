@@ -33,11 +33,24 @@ public class RestExceptionHandler {
         return buildResponseEntity(new ApiErrorResponse(ex.getMessage()), BAD_REQUEST);
     }
 
+    @ExceptionHandler(EmployeePhoneFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleEmployeePhoneFoundException(EmployeePhoneFoundException ex) {
+        log.warn("createEmployee throws EmployeePhoneFoundException: {}", ex.getMessage());
+        return buildResponseEntity(new ApiErrorResponse(ex.getMessage()), BAD_REQUEST);
+    }
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(EmployeeBirthDateFormatException.class)
-    public ApiDtoValidationExceptionResponse handleEmployeeBirthDateDeserializeException(EmployeeBirthDateFormatException ex) {
+    public ApiDtoValidationExceptionResponse handleEmployeeBirthDateFormatException(EmployeeBirthDateFormatException ex) {
         log.warn("Employee birthDate validation exception: {}", ex.getMessage());
         return new ApiDtoValidationExceptionResponse("Invalid request data", Map.of("birthDate", ex.getMessage()));
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(EmployeePhoneTypeFormatException.class)
+    public ApiDtoValidationExceptionResponse handleEmployeePhoneTypeFormatException(EmployeePhoneTypeFormatException ex) {
+        log.warn("Employee phone type validation exception: {}", ex.getMessage());
+        return new ApiDtoValidationExceptionResponse("Invalid request data", Map.of("phoneType", ex.getMessage()));
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
