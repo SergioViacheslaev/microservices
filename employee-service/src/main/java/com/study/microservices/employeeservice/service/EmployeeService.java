@@ -9,9 +9,11 @@ import com.study.microservices.employeeservice.model.dto.EmployeePassport;
 import com.study.microservices.employeeservice.model.dto.EmployeePhoneDto;
 import com.study.microservices.employeeservice.model.dto.EmployeeResponseDto;
 import com.study.microservices.employeeservice.model.dto.PhoneType;
+import com.study.microservices.employeeservice.model.entity.EmployeeDepartmentEntity;
 import com.study.microservices.employeeservice.model.entity.EmployeeEntity;
 import com.study.microservices.employeeservice.model.entity.EmployeePassportEntity;
 import com.study.microservices.employeeservice.model.entity.EmployeePhoneEntity;
+import com.study.microservices.employeeservice.repo.EmployeeDepartmentRepository;
 import com.study.microservices.employeeservice.repo.EmployeePhoneRepository;
 import com.study.microservices.employeeservice.repo.EmployeeRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +24,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -31,12 +35,14 @@ public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
     private final EmployeePhoneRepository employeePhoneRepository;
+    private final EmployeeDepartmentRepository employeeDepartmentRepository;
 
     public EmployeeService(EmployeeRepository employeeRepository,
-                           EmployeePhoneRepository employeePhoneRepository
-    ) {
+                           EmployeePhoneRepository employeePhoneRepository,
+                           EmployeeDepartmentRepository employeeDepartmentRepository) {
         this.employeeRepository = employeeRepository;
         this.employeePhoneRepository = employeePhoneRepository;
+        this.employeeDepartmentRepository = employeeDepartmentRepository;
     }
 
     @Transactional(readOnly = true)
@@ -80,7 +86,6 @@ public class EmployeeService {
                 .passportNumber(Long.valueOf(employeeCreateRequestDto.passport().passportNumber()))
                 .registrationAddress(employeeCreateRequestDto.passport().registrationAddress())
                 .build();
-        employeePassportEntity.setEmployee(employeeToSave);
 
         final List<EmployeePhoneEntity> employeePhonesToSave = employeeCreateRequestDto.phones().stream()
                 .map(employeePhone -> EmployeePhoneEntity.builder()
@@ -89,8 +94,21 @@ public class EmployeeService {
                         .build())
                 .toList();
 
-        employeeToSave.setPassport(employeePassportEntity);
+        //Set existing department or save and set new
+        val employeeDepartmentsToSave = new ArrayList<EmployeeDepartmentEntity>();
+        employeeCreateRequestDto.departments().forEach(dtoDepartment -> {
+            Optional<EmployeeDepartmentEntity> departmentEntity = employeeDepartmentRepository.findByDepartmentName(dtoDepartment.departmentName());
+            departmentEntity.ifPresent(employeeDepartmentsToSave::add);
+            if (departmentEntity.isEmpty()) {
+                employeeDepartmentsToSave.add(EmployeeDepartmentEntity.builder()
+                        .departmentName(dtoDepartment.departmentName())
+                        .build());
+            }
+        });
+
+        employeeToSave.addPassport(employeePassportEntity);
         employeeToSave.addPhones(employeePhonesToSave);
+        employeeDepartmentsToSave.forEach(employeeToSave::addDepartment);
 
         val savedEmployeeEntity = employeeRepository.save(employeeToSave);
         val employeeResponseDto = getEmployeeResponseDtoFromEntity(savedEmployeeEntity);

@@ -32,6 +32,9 @@ public record EmployeeCreateRequestDto(
         EmployeePassport passport,
 
         @NotNull
+        List<@Valid EmployeeDepartment> departments,
+
+        @NotNull
         @Size(min = 1, message = "Должен быть указан хотябы один телефон сотрудника")
         List<@Valid EmployeePhoneDto> phones) {
 }

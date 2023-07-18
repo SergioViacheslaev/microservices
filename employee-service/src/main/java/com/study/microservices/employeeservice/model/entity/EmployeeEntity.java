@@ -14,12 +14,10 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -27,11 +25,11 @@ import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static jakarta.persistence.CascadeType.ALL;
+import static jakarta.persistence.CascadeType.MERGE;
+import static jakarta.persistence.CascadeType.PERSIST;
 import static java.util.Objects.isNull;
 
 @Entity
@@ -60,20 +58,21 @@ public class EmployeeEntity extends AuditedEntity {
     @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn
     @LazyToOne(LazyToOneOption.NO_PROXY)
-    @Getter(AccessLevel.NONE)
     private EmployeePassportEntity passport;
 
     @OneToMany(cascade = ALL, mappedBy = "employee", fetch = FetchType.LAZY)
-    @Getter(AccessLevel.NONE)
     private List<EmployeePhoneEntity> phones;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @Fetch(FetchMode.SUBSELECT) // fixes N+1 problem, first select all departments, then joins with all fetched employees
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {
+            PERSIST,
+            MERGE
+    })
+    // fixes N+1 problem, first select all departments, then joins with all fetched employees
+    @Fetch(FetchMode.SUBSELECT)
     @JoinTable(name = "employees_departments",
             joinColumns = @JoinColumn(name = "employee_id"),
             inverseJoinColumns = @JoinColumn(name = "department_id"))
-    @Getter(AccessLevel.NONE)
-    private List<EmployeeDepartmentEntity> departments;
+    private Set<EmployeeDepartmentEntity> departments = new HashSet<>();
 
     /**
      * In bidirectional association:
@@ -87,15 +86,28 @@ public class EmployeeEntity extends AuditedEntity {
         this.setPhones(phones);
     }
 
+    public void addPassport(EmployeePassportEntity passport) {
+        this.passport = passport;
+        passport.setEmployee(this);
+    }
+
+    public void addDepartment(EmployeeDepartmentEntity employeeDepartment) {
+        if (departments == null) {
+            departments = new HashSet<>();
+        }
+        employeeDepartment.getEmployees().add(this);
+        departments.add(employeeDepartment);
+    }
+
+    public List<EmployeePhoneEntity> getPhones() {
+        return isNull(phones) ? new ArrayList<>() : phones;
+    }
+
     public EmployeePassportEntity getPassport() {
         return isNull(passport) ? EmployeePassportEntity.builder().build() : passport;
     }
 
-    public List<EmployeePhoneEntity> getPhones() {
-        return isNull(phones) ? Collections.emptyList() : phones;
-    }
-
-    public List<EmployeeDepartmentEntity> getDepartments() {
-        return isNull(departments) ? Collections.emptyList() : departments;
+    public Set<EmployeeDepartmentEntity> getDepartments() {
+        return isNull(departments) ? new HashSet<>() : departments;
     }
 }

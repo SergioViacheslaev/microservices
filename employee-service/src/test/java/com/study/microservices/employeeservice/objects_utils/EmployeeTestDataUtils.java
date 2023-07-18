@@ -30,7 +30,7 @@ public class EmployeeTestDataUtils {
                 .build();
 
         employeeEntity.setPhones(employeePhoneEntities);
-        employeeEntity.setPassport(employeePassportEntity);
+        employeeEntity.addPassport(employeePassportEntity);
         employeePassportEntity.setEmployee(employeeEntity);
         employeePhoneEntities.forEach(employeePhoneEntity -> employeePhoneEntity.setEmployee(employeeEntity));
 
@@ -49,6 +49,9 @@ public class EmployeeTestDataUtils {
                 .phones(List.of(EmployeePhoneDto.builder()
                         .phoneNumber("71234567890")
                         .phoneType("Рабочий")
+                        .build()))
+                .departments(List.of(EmployeeDepartment.builder()
+                        .departmentName("Управление автоматизации")
                         .build()))
                 .build();
     }
