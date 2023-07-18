@@ -2,6 +2,7 @@ package com.study.microservices.employeeservice.model.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.study.microservices.employeeservice.utils.jackson.EmployeeBirthDateDeserializer;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -14,6 +15,7 @@ import java.util.List;
 
 
 @Builder
+@Schema
 public record EmployeeCreateRequestDto(
 
         @NotBlank(message = "Имя сотрудника должно быть заполнено")
@@ -25,6 +27,7 @@ public record EmployeeCreateRequestDto(
         @Past(message = "Дата рождения должна быть в прошедшем времени")
         @NotNull
         @JsonDeserialize(using = EmployeeBirthDateDeserializer.class)
+        @Schema(type = "string", format = "date", example = "1987-11-25")
         LocalDate birthDate,
 
         @NotNull

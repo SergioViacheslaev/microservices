@@ -113,7 +113,7 @@ public class EmployeeService {
         val savedEmployeeEntity = employeeRepository.save(employeeToSave);
         val employeeResponseDto = getEmployeeResponseDtoFromEntity(savedEmployeeEntity);
 
-        log.info("Saved EmployeeEntity {}", employeeResponseDto);
+        log.info("Created EmployeeEntity {}", employeeResponseDto);
 
         return employeeResponseDto;
     }
