@@ -98,8 +98,8 @@ public class EmployeeService {
 
     @Transactional
     public EmployeeResponseDto updateEmployee(String passportNumber, EmployeeUpdateRequestDto employeeUpdateRequestDto) {
-        val employeeEntityToUpdate = employeeRepository.findByPassportNumber(passportNumber).orElseThrow(() -> new EmployeeNotFoundException(
-                String.format("Employee with passport number %s not found", passportNumber)));
+        val employeeEntityToUpdate = employeeRepository.findByPassportNumber(passportNumber)
+                .orElseThrow(() -> new EmployeeNotFoundException(String.format("Employee with passport number %s not found", passportNumber)));
 
         employeeMapper.updateEmployeeFromDto(employeeUpdateRequestDto, employeeEntityToUpdate);
 
@@ -109,6 +109,16 @@ public class EmployeeService {
         log.info("Updated EmployeeEntity {}", employeeResponseDto);
 
         return employeeResponseDto;
+    }
+
+    @Transactional
+    public void deleteEmployee(String passportNumber) {
+        val employeeEntityToDelete = employeeRepository.findByPassportNumber(passportNumber)
+                .orElseThrow(() -> new EmployeeNotFoundException(String.format("Employee with passport number %s not found", passportNumber)));
+
+        employeeRepository.deleteById(employeeEntityToDelete.getId());
+
+        log.info("Deleted EmployeeEntity with Id: {}", employeeEntityToDelete.getId());
     }
 
     @Transactional(readOnly = true)
@@ -141,8 +151,7 @@ public class EmployeeService {
     @Transactional(readOnly = true)
     public EmployeeResponseDto findEmployeeByPhoneNumber(String phoneNumber) {
         val employeeEntity = employeeRepository.findByPhoneNumber(phoneNumber)
-                .orElseThrow(() -> new EmployeeNotFoundException(
-                        String.format("Employee with such phone number %s doesn't exist", phoneNumber)));
+                .orElseThrow(() -> new EmployeeNotFoundException(String.format("Employee with such phone number %s doesn't exist", phoneNumber)));
 
         log.info("Found employeeEntity {}", employeeEntity);
 
