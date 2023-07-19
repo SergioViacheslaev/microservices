@@ -13,6 +13,7 @@ import com.study.microservices.employeeservice.model.entity.EmployeeDepartmentEn
 import com.study.microservices.employeeservice.model.entity.EmployeeEntity;
 import com.study.microservices.employeeservice.model.entity.EmployeePassportEntity;
 import com.study.microservices.employeeservice.model.entity.EmployeePhoneEntity;
+import com.study.microservices.employeeservice.model.mapper.EmployeeMapper;
 import com.study.microservices.employeeservice.repo.EmployeeDepartmentRepository;
 import com.study.microservices.employeeservice.repo.EmployeePhoneRepository;
 import com.study.microservices.employeeservice.repo.EmployeeRepository;
@@ -36,13 +37,16 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final EmployeePhoneRepository employeePhoneRepository;
     private final EmployeeDepartmentRepository employeeDepartmentRepository;
+    private final EmployeeMapper employeeMapper;
 
     public EmployeeService(EmployeeRepository employeeRepository,
                            EmployeePhoneRepository employeePhoneRepository,
-                           EmployeeDepartmentRepository employeeDepartmentRepository) {
+                           EmployeeDepartmentRepository employeeDepartmentRepository,
+                           EmployeeMapper employeeMapper) {
         this.employeeRepository = employeeRepository;
         this.employeePhoneRepository = employeePhoneRepository;
         this.employeeDepartmentRepository = employeeDepartmentRepository;
+        this.employeeMapper = employeeMapper;
     }
 
     @Transactional(readOnly = true)
@@ -50,7 +54,7 @@ public class EmployeeService {
         val employeeEntities = employeeRepository.findAllWithPassportAndPhones();
 
         return employeeEntities.stream()
-                .map(this::getEmployeeResponseDtoFromEntity)
+                .map(employeeMapper::toEmployeeResponseDto)
                 .toList();
     }
 
@@ -111,7 +115,7 @@ public class EmployeeService {
         employeeDepartmentsToSave.forEach(employeeToSave::addDepartment);
 
         val savedEmployeeEntity = employeeRepository.save(employeeToSave);
-        val employeeResponseDto = getEmployeeResponseDtoFromEntity(savedEmployeeEntity);
+        val employeeResponseDto = employeeMapper.toEmployeeResponseDto(savedEmployeeEntity);
 
         log.info("Created EmployeeEntity {}", employeeResponseDto);
 

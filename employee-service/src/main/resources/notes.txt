@@ -1,6 +1,7 @@
 1. Spring Boot 3.0 will be the first version of Spring Boot that makes use of Jakarta EE 9 APIs (jakarta.) instead of EE 8 (javax.)
 2. Please note that springdoc-openapi-ui now changed to springdoc-openapi-starter-webmvc-ui from spring boot 3.
 3. Pageable request params: starting from page zero (0) and size (elements on page)
+4. Mapstruct doesn't see Id property in EmployeeEntity
 
 
 
