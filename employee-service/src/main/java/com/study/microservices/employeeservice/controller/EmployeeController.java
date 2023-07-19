@@ -2,6 +2,7 @@ package com.study.microservices.employeeservice.controller;
 
 import com.study.microservices.employeeservice.model.dto.EmployeeCreateRequestDto;
 import com.study.microservices.employeeservice.model.dto.EmployeeResponseDto;
+import com.study.microservices.employeeservice.model.dto.EmployeeUpdateRequestDto;
 import com.study.microservices.employeeservice.service.EmployeeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,8 +35,19 @@ public class EmployeeController {
     @Operation(summary = "Create new Employee", description = "Create new Employee with phones")
     @PostMapping
     public ResponseEntity<EmployeeResponseDto> createEmployee(@Valid @RequestBody EmployeeCreateRequestDto employeeCreateRequestDto) {
-        log.info("Received createEmployee requestDto {}", employeeCreateRequestDto);
+        log.info("Received employeeCreateRequestDto {}", employeeCreateRequestDto);
         return new ResponseEntity<>(employeeService.createEmployee(employeeCreateRequestDto), HttpStatus.CREATED);
+    }
+
+    @Operation(summary = "Update existing Employee", description = "Updates existing Employee, found by passport number")
+    @PatchMapping(path = "/{passport_number}")
+    public ResponseEntity<EmployeeResponseDto> updateEmployee(
+            @Parameter(required = true)
+            @PathVariable("passport_number")
+            String passportNumber,
+            @Valid @RequestBody EmployeeUpdateRequestDto employeeUpdateRequestDto) {
+        log.info("Received employeeUpdateRequestDto {}", employeeUpdateRequestDto);
+        return new ResponseEntity<>(employeeService.updateEmployee(passportNumber, employeeUpdateRequestDto), HttpStatus.OK);
     }
 
     @Operation(summary = "Find all Employees", description = "Find all Employees description")

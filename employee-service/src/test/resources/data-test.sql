@@ -29,7 +29,7 @@ VALUES ('b16355a9-3edf-418d-bafc-52e46f6703e1', '792112345671', 'WORK'),
        ('b16355a9-3edf-418d-bafc-52e46f6703e1', '796598387472', 'HOME');
 
 INSERT INTO passports (employee_id, passport_number, registration_address)
-VALUES ('b16355a9-3edf-418d-bafc-52e46f6703e1', 123456789, 'Улица Пушкина, дом Колотушкина');
+VALUES ('b16355a9-3edf-418d-bafc-52e46f6703e1', 1234567891, 'Улица Пушкина, дом Колотушкина');
 
 INSERT INTO employees_departments (employee_id, department_id)
 VALUES ('b16355a9-3edf-418d-bafc-52e46f6703e1', 100),

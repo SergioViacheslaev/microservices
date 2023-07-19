@@ -1,5 +1,3 @@
-1. Use MapStruct entity->Dto
-2. Add audit CREATED_BY, UPDATED_BY, CREATED_ON, UPDATED_ON
-3. UPDATE, DELETE  Employee -> implement repo and service
-4. Check request Dto date validation best practices
-5. Нотификация при создании нового юзера ?
+1. DELETE  Employee implement
+2. Check request Dto date validation best practices
+3. Notify when new Employee is created

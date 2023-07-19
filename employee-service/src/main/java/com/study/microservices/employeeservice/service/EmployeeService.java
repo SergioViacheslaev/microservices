@@ -8,6 +8,7 @@ import com.study.microservices.employeeservice.model.dto.EmployeeDepartment;
 import com.study.microservices.employeeservice.model.dto.EmployeePassport;
 import com.study.microservices.employeeservice.model.dto.EmployeePhoneDto;
 import com.study.microservices.employeeservice.model.dto.EmployeeResponseDto;
+import com.study.microservices.employeeservice.model.dto.EmployeeUpdateRequestDto;
 import com.study.microservices.employeeservice.model.dto.PhoneType;
 import com.study.microservices.employeeservice.model.entity.EmployeeDepartmentEntity;
 import com.study.microservices.employeeservice.model.entity.EmployeeEntity;
@@ -47,33 +48,6 @@ public class EmployeeService {
         this.employeePhoneRepository = employeePhoneRepository;
         this.employeeDepartmentRepository = employeeDepartmentRepository;
         this.employeeMapper = employeeMapper;
-    }
-
-    @Transactional(readOnly = true)
-    public List<EmployeeResponseDto> getAllEmployees() {
-        val employeeEntities = employeeRepository.findAllWithPassportAndPhones();
-
-        return employeeEntities.stream()
-                .map(employeeMapper::toEmployeeResponseDto)
-                .toList();
-    }
-
-    @Transactional(readOnly = true)
-    public Page<EmployeeResponseDto> getAllEmployeesByNameSortedByBirthDate(String employeeName, int page, int size) {
-        val employeeResponseDtoList = employeeRepository.findAllByNameOrderByBirthDate(employeeName, PageRequest.of(page, size))
-                .stream()
-                .map(this::getEmployeeResponseDtoFromEntity)
-                .toList();
-
-        return new PageImpl<>(employeeResponseDtoList);
-    }
-
-    @Transactional(readOnly = true)
-    public EmployeeResponseDto getEmployeeByNameAndSurname(String employeeName, String employeeSurname) {
-        return employeeRepository.findByNameAndSurname(employeeName, employeeSurname)
-                .map(this::getEmployeeResponseDtoFromEntity)
-                .orElseThrow(() -> new EmployeeNotFoundException(
-                        String.format("Employee with name %s and surname %s doesn't exist", employeeName, employeeSurname)));
     }
 
     @Transactional
@@ -120,6 +94,48 @@ public class EmployeeService {
         log.info("Created EmployeeEntity {}", employeeResponseDto);
 
         return employeeResponseDto;
+    }
+
+    @Transactional
+    public EmployeeResponseDto updateEmployee(String passportNumber, EmployeeUpdateRequestDto employeeUpdateRequestDto) {
+        val employeeEntityToUpdate = employeeRepository.findByPassportNumber(passportNumber).orElseThrow(() -> new EmployeeNotFoundException(
+                String.format("Employee with passport number %s not found", passportNumber)));
+
+        employeeMapper.updateEmployeeFromDto(employeeUpdateRequestDto, employeeEntityToUpdate);
+
+        val updatedEmployeeEntity = employeeRepository.save(employeeEntityToUpdate);
+        val employeeResponseDto = employeeMapper.toEmployeeResponseDto(updatedEmployeeEntity);
+
+        log.info("Updated EmployeeEntity {}", employeeResponseDto);
+
+        return employeeResponseDto;
+    }
+
+    @Transactional(readOnly = true)
+    public List<EmployeeResponseDto> getAllEmployees() {
+        val employeeEntities = employeeRepository.findAllWithPassportAndPhones();
+
+        return employeeEntities.stream()
+                .map(employeeMapper::toEmployeeResponseDto)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public Page<EmployeeResponseDto> getAllEmployeesByNameSortedByBirthDate(String employeeName, int page, int size) {
+        val employeeResponseDtoList = employeeRepository.findAllByNameOrderByBirthDate(employeeName, PageRequest.of(page, size))
+                .stream()
+                .map(this::getEmployeeResponseDtoFromEntity)
+                .toList();
+
+        return new PageImpl<>(employeeResponseDtoList);
+    }
+
+    @Transactional(readOnly = true)
+    public EmployeeResponseDto getEmployeeByNameAndSurname(String employeeName, String employeeSurname) {
+        return employeeRepository.findByNameAndSurname(employeeName, employeeSurname)
+                .map(this::getEmployeeResponseDtoFromEntity)
+                .orElseThrow(() -> new EmployeeNotFoundException(
+                        String.format("Employee with name %s and surname %s doesn't exist", employeeName, employeeSurname)));
     }
 
     @Transactional(readOnly = true)

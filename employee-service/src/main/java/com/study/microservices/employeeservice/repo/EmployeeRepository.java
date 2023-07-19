@@ -37,5 +37,13 @@ public interface EmployeeRepository extends JpaRepository<EmployeeEntity, UUID> 
                     """)
     Optional<EmployeeEntity> findByPhoneNumber(@Param("phoneNumber") String phoneNumber);
 
+    @Query(
+            value = """ 
+                    SELECT e,e_passport FROM EmployeeEntity e
+                    left join fetch EmployeePassportEntity e_passport on e.Id = e_passport.employeeId
+                    where e_passport.passportNumber = :passportNumber
+                    """)
+    Optional<EmployeeEntity> findByPassportNumber(@Param("passportNumber") String passportNumber);
+
     Page<EmployeeEntity> findAllByNameOrderByBirthDate(String employeeName, Pageable page);
 }
