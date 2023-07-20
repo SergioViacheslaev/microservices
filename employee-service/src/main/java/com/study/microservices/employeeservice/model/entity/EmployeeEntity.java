@@ -24,8 +24,13 @@ import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.CascadeType.MERGE;
@@ -54,6 +59,12 @@ public class EmployeeEntity extends AuditedEntity {
 
     @Column(name = "employee_birth_date")
     private LocalDate birthDate;
+
+    @Column(name = "monthly_salary",precision = 10, scale = 3)
+    private BigDecimal monthlySalary;
+
+    @Column(name = "payroll_account")
+    private String payrollAccount;
 
     @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn

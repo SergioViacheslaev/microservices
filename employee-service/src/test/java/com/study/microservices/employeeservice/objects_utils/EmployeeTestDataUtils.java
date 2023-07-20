@@ -1,11 +1,13 @@
 package com.study.microservices.employeeservice.objects_utils;
 
 import com.study.microservices.employeeservice.model.dto.*;
+import com.study.microservices.employeeservice.model.entity.EmployeeDepartmentEntity;
 import com.study.microservices.employeeservice.model.entity.EmployeeEntity;
 import com.study.microservices.employeeservice.model.entity.EmployeePassportEntity;
 import com.study.microservices.employeeservice.model.entity.EmployeePhoneEntity;
 import lombok.experimental.UtilityClass;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -17,6 +19,8 @@ public class EmployeeTestDataUtils {
                 .name("Alex")
                 .surname("Ivanov")
                 .birthDate(LocalDate.parse("2007-12-03"))
+                .monthlySalary(BigDecimal.valueOf(100_000))
+                .payrollAccount("1122 1234567890")
                 .build();
 
         List<EmployeePhoneEntity> employeePhoneEntities = List.of(EmployeePhoneEntity.builder()
@@ -29,10 +33,13 @@ public class EmployeeTestDataUtils {
                 .registrationAddress("Улица Пушкина Дом 1")
                 .build();
 
-        employeeEntity.setPhones(employeePhoneEntities);
+        EmployeeDepartmentEntity employeeDepartmentEntity = EmployeeDepartmentEntity.builder()
+                .departmentName("АХО")
+                .build();
+
+        employeeEntity.addPhones(employeePhoneEntities);
         employeeEntity.addPassport(employeePassportEntity);
-        employeePassportEntity.setEmployee(employeeEntity);
-        employeePhoneEntities.forEach(employeePhoneEntity -> employeePhoneEntity.setEmployee(employeeEntity));
+        employeeEntity.addDepartment(employeeDepartmentEntity);
 
         return employeeEntity;
     }

@@ -35,13 +35,16 @@ public class EmployeeServiceJpaTest {
         employeeRepository.save(employeeEntityToSave);
 
         Optional<EmployeeEntity> optionalEmployee = employeeRepository.findByNameAndSurname("Alex", "Ivanov");
-
         assertTrue(optionalEmployee.isPresent());
+
         val savedEmployeeEntity = optionalEmployee.get();
         assertThat(savedEmployeeEntity.getPhones().size()).isEqualTo(1);
+        assertThat(savedEmployeeEntity.getDepartments().size()).isEqualTo(1);
         assertEquals(employeeEntityToSave.getPassport().getPassportNumber(), savedEmployeeEntity.getPassport().getPassportNumber());
         assertEquals(employeeEntityToSave.getName(), savedEmployeeEntity.getName());
         assertEquals(employeeEntityToSave.getSurname(), savedEmployeeEntity.getSurname());
+        assertEquals(employeeEntityToSave.getMonthlySalary(), savedEmployeeEntity.getMonthlySalary());
+        assertEquals(employeeEntityToSave.getPayrollAccount(), savedEmployeeEntity.getPayrollAccount());
 
         assertNotNull(savedEmployeeEntity.getId());
         assertNotNull(savedEmployeeEntity.getCreatedOn());

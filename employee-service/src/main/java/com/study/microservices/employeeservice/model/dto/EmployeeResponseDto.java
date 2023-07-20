@@ -13,6 +13,8 @@ public record EmployeeResponseDto(
         String surname,
         LocalDate birthDate,
         EmployeePassport passport,
+        String monthlySalary,
+        String payrollAccount,
         List<EmployeePhoneDto> phones,
         List<EmployeeDepartment> departments) {
 }

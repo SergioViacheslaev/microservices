@@ -1,3 +1,2 @@
-1. DELETE  Employee implement
-2. Check request Dto date validation best practices
-3. Notify when new Employee is created
+1. Check request Dto date validation best practices
+2. Notify when new Employee is created
