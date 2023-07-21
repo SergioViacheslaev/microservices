@@ -1,0 +1,2 @@
+1. liquibase
+2. Kafka docker
