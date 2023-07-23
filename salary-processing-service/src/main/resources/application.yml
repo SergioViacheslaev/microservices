@@ -7,4 +7,22 @@ server:
 spring:
   docker:
     compose:
-      enabled: false
+      enabled: true
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: com.study.microservices.salaryprocessingservice.model.dto
+        spring.json.value.default.type: com.study.microservices.salaryprocessingservice.model.dto.EmployeePaymentDto
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: false
+
+logging:
+  level:
+    org.springframework.kafka: INFO
+

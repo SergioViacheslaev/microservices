@@ -1,0 +1,1 @@
+Kafka, producer sends message with key and without it, behaviour.
