@@ -63,7 +63,7 @@ public class EmployeeController {
         employeeService.deleteEmployee(passportNumber);
     }
 
-    @Operation(summary = "Find all Employees", description = "Find all Employees description")
+    @Operation(summary = "Find all Employees", description = "Finds all Employees")
     @GetMapping
     public ResponseEntity<List<EmployeeResponseDto>> getAllEmployees() {
         log.info("Received getAllEmployees request");
