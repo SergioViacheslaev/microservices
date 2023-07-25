@@ -1,31 +1,31 @@
 plugins {
-	id 'java'
-	id 'idea'
-	id 'org.springframework.boot' version '3.1.1'
-	id 'io.spring.dependency-management' version '1.1.0'
-	id 'org.flywaydb.flyway' version '9.17.0'
-	id 'org.hibernate.orm' version '6.2.4.Final'
+    id 'java'
+    id 'idea'
+    id 'org.springframework.boot' version "$springBootVersion"
+    id 'io.spring.dependency-management' version "$springDependencyManagementVersion"
+    id 'org.flywaydb.flyway' version "$flywayVersion"
+    id 'org.hibernate.orm' version "$hibernateVersion"
 }
 
 idea {
-	module {
-		downloadJavadoc = true
-		downloadSources = true
-	}
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
 }
 
 hibernate {
-	enhancement {
-		lazyInitialization = true
-		dirtyTracking = true
-	}
+    enhancement {
+        lazyInitialization = true
+        dirtyTracking = true
+    }
 }
 
 flyway {
-	url = 'jdbc:h2:mem:employees_db;MODE=PostgreSQL'
-	user = 'sa'
-	password = 'sa'
-	cleanDisabled = false
+    url = 'jdbc:h2:mem:employees_db;MODE=PostgreSQL'
+    user = 'sa'
+    password = 'sa'
+    cleanDisabled = false
 }
 
 group = 'com.microservices'
@@ -33,39 +33,38 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
-	implementation 'org.flywaydb:flyway-core:9.17.0'
-	implementation 'org.postgresql:postgresql:42.6.0'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocVersion"
+    implementation "org.flywaydb:flyway-core:$flywayVersion"
+    implementation "org.postgresql:postgresql:$postgresVersion"
 
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	runtimeOnly 'com.h2database:h2'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    runtimeOnly 'com.h2database:h2'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-	compileOnly 'org.projectlombok:lombok:1.18.26'
-	annotationProcessor 'org.projectlombok:lombok:1.18.26'
+    compileOnly "org.projectlombok:lombok:$lombokVersion"
+    annotationProcessor "org.projectlombok:lombok:$lombokVersion"
 
-	testCompileOnly 'org.projectlombok:lombok:1.18.26'
-	testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
+    testCompileOnly "org.projectlombok:lombok:$lombokVersion"
+    testAnnotationProcessor "org.projectlombok:lombok:$lombokVersion"
 
-	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
-	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
-	annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+    implementation "org.mapstruct:mapstruct:$mapstructVersion"
+    annotationProcessor "org.mapstruct:mapstruct-processor:$mapstructVersion"
 
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
