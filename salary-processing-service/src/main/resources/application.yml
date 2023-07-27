@@ -3,7 +3,6 @@ server:
   servlet:
     context-path: /microservices
 
-
 spring:
   docker:
     compose:
@@ -21,6 +20,10 @@ spring:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       properties:
         spring.json.add.type.headers: false
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
 
 logging:
   level:

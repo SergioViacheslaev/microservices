@@ -1,18 +1,16 @@
 package com.study.microservices.salaryprocessingservice.service.kafka;
 
-import static com.study.microservices.salaryprocessingservice.config.KafkaConfig.SALARY_PAYMENT_TOPIC;
-import static com.study.microservices.salaryprocessingservice.config.KafkaConfig.SALARY_PAYMENT_TOPIC_KEY;
-import static com.study.microservices.salaryprocessingservice.utils.DtoUtils.getEmployeePaymentDummy;
-import static com.study.microservices.salaryprocessingservice.utils.DtoUtils.getEmployeePayments;
-
 import com.study.microservices.salaryprocessingservice.api.EmployeeServiceApiClient;
 import com.study.microservices.salaryprocessingservice.model.dto.EmployeePaymentDto;
-import com.study.microservices.salaryprocessingservice.utils.DtoUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+
+import static com.study.microservices.salaryprocessingservice.config.KafkaConfig.SALARY_PAYMENT_TOPIC;
+import static com.study.microservices.salaryprocessingservice.config.KafkaConfig.SALARY_PAYMENT_TOPIC_KEY;
+import static com.study.microservices.salaryprocessingservice.utils.DtoUtils.getEmployeePayments;
 
 @Slf4j
 @Service
@@ -23,11 +21,10 @@ public class SalaryProcessingService {
     private final KafkaTemplate<String, EmployeePaymentDto> kafkaTemplate;
 
     public void processEmployeesSalary() {
-//        Call external service
-//        val employees = employeeServiceClient.getAllEmployees();
-//        val employeesPayments = getEmployeePayments(employees);
+        val employees = employeeServiceClient.getAllEmployees();
+        val employeesPayments = getEmployeePayments(employees);
 
-        sendEmployeePayment(SALARY_PAYMENT_TOPIC, SALARY_PAYMENT_TOPIC_KEY, getEmployeePaymentDummy());
+        employeesPayments.forEach(employeePayment -> sendEmployeePayment(SALARY_PAYMENT_TOPIC, SALARY_PAYMENT_TOPIC_KEY, employeePayment));
     }
 
     private void sendEmployeePayment(String topicName, String key, EmployeePaymentDto employeePayment) {
@@ -35,12 +32,12 @@ public class SalaryProcessingService {
 
         sendResultAsync.whenComplete((sendResult, exception) -> {
             if (exception != null) {
+                log.error("Error sending employee payment {} to Kafka topic: {}, key: {} ", employeePayment, topicName, key);
                 sendResultAsync.completeExceptionally(exception);
             } else {
+                log.info("Sent employee payment {} to Kafka topic: {}, key: {} ", employeePayment, topicName, key);
                 sendResultAsync.complete(sendResult);
             }
-            log.info("SalaryProcessingService sent employee payment {} to Kafka topic: {}, key: {} ", employeePayment,
-                    topicName, key);
         });
     }
 
