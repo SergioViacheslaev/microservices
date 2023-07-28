@@ -53,6 +53,8 @@ public class EmployeeTestDataUtils {
                         .passportNumber("1234567890")
                         .registrationAddress("FooBar")
                         .build())
+                .monthlySalary("150000")
+                .payrollAccount("1234 1112223339")
                 .phones(List.of(EmployeePhoneDto.builder()
                         .phoneNumber("71234567890")
                         .phoneType("Рабочий")

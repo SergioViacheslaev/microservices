@@ -20,7 +20,7 @@ spring:
 #      mode: ALWAYS
   jpa:
     open-in-view: false
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+#    database-platform: org.hibernate.dialect.PostgreSQLDialect
     defer-datasource-initialization: false
     hibernate:
       ddl-auto: none

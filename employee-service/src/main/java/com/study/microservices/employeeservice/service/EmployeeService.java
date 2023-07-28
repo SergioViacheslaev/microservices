@@ -11,6 +11,8 @@ import com.study.microservices.employeeservice.model.entity.EmployeeDepartmentEn
 import com.study.microservices.employeeservice.model.entity.EmployeeEntity;
 import com.study.microservices.employeeservice.model.entity.EmployeePassportEntity;
 import com.study.microservices.employeeservice.model.entity.EmployeePhoneEntity;
+import com.study.microservices.employeeservice.model.events.EmployeeEvent;
+import com.study.microservices.employeeservice.model.events.EmployeeEventType;
 import com.study.microservices.employeeservice.model.mapper.EmployeeMapper;
 import com.study.microservices.employeeservice.repo.EmployeeDepartmentRepository;
 import com.study.microservices.employeeservice.repo.EmployeePhoneRepository;
@@ -18,12 +20,14 @@ import com.study.microservices.employeeservice.repo.EmployeeRepository;
 import com.study.microservices.employeeservice.utils.DtoUtils;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,15 +38,18 @@ import static com.study.microservices.employeeservice.utils.DtoUtils.getEmployee
 @Service
 public class EmployeeService {
 
+    private final ApplicationEventPublisher eventPublisher;
     private final EmployeeRepository employeeRepository;
     private final EmployeePhoneRepository employeePhoneRepository;
     private final EmployeeDepartmentRepository employeeDepartmentRepository;
     private final EmployeeMapper employeeMapper;
 
-    public EmployeeService(EmployeeRepository employeeRepository,
+    public EmployeeService(ApplicationEventPublisher eventPublisher,
+                           EmployeeRepository employeeRepository,
                            EmployeePhoneRepository employeePhoneRepository,
                            EmployeeDepartmentRepository employeeDepartmentRepository,
                            EmployeeMapper employeeMapper) {
+        this.eventPublisher = eventPublisher;
         this.employeeRepository = employeeRepository;
         this.employeePhoneRepository = employeePhoneRepository;
         this.employeeDepartmentRepository = employeeDepartmentRepository;
@@ -57,6 +64,8 @@ public class EmployeeService {
                 .name(employeeCreateRequestDto.name())
                 .surname(employeeCreateRequestDto.surname())
                 .birthDate(employeeCreateRequestDto.birthDate())
+                .monthlySalary(new BigDecimal(employeeCreateRequestDto.monthlySalary()))
+                .payrollAccount(employeeCreateRequestDto.payrollAccount())
                 .build();
 
         final EmployeePassportEntity employeePassportEntity = EmployeePassportEntity.builder()
@@ -90,7 +99,7 @@ public class EmployeeService {
         val savedEmployeeEntity = employeeRepository.save(employeeToSave);
         val employeeResponseDto = employeeMapper.toEmployeeResponseDto(savedEmployeeEntity);
 
-        log.info("Created EmployeeEntity {}", employeeResponseDto);
+        eventPublisher.publishEvent(new EmployeeEvent(EmployeeEventType.CREATE.getName(), employeeResponseDto.toString()));
 
         return employeeResponseDto;
     }
@@ -117,7 +126,8 @@ public class EmployeeService {
 
         employeeRepository.deleteById(employeeEntityToDelete.getId());
 
-        log.info("Deleted EmployeeEntity with Id: {}", employeeEntityToDelete.getId());
+        eventPublisher.publishEvent(new EmployeeEvent(EmployeeEventType.DELETE.getName(),
+                String.format("сотрудник с номером паспорта %s", passportNumber)));
     }
 
     @Transactional(readOnly = true)

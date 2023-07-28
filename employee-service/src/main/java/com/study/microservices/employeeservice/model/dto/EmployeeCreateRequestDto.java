@@ -34,10 +34,18 @@ public record EmployeeCreateRequestDto(
         @Valid
         EmployeePassport passport,
 
+        @NotBlank(message = "Месячная зарплата")
+        @Schema(type = "string", example = "125000")
+        String monthlySalary,
+
+        @NotBlank(message = "Счет зачисления зарплаты")
+        @Schema(type = "string", example = "1234 1112223330")
+        String payrollAccount,
+
         @NotNull
         List<@Valid EmployeeDepartment> departments,
 
         @NotNull
-        @Size(min = 1, message = "Должен быть указан хотябы один телефон сотрудника")
+        @Size(min = 1, message = "Должен быть указан хотя бы один телефон сотрудника")
         List<@Valid EmployeePhoneDto> phones) {
 }

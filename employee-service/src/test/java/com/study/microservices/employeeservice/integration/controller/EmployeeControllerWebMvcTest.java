@@ -69,7 +69,7 @@ public class EmployeeControllerWebMvcTest {
                 .andExpect(jsonPath("$.validationErrors.name").value("Имя сотрудника должно быть заполнено"))
                 .andExpect(jsonPath("$.validationErrors.surname").value("Фамилия сотрудника должно быть заполнено"))
                 .andExpect(jsonPath("$.validationErrors.birthDate").value("Дата рождения должна быть в прошедшем времени"))
-                .andExpect(jsonPath("$.validationErrors.phones").value("Должен быть указан хотябы один телефон сотрудника"))
+                .andExpect(jsonPath("$.validationErrors.phones").value("Должен быть указан хотя бы один телефон сотрудника"))
                 .andDo(print());
     }
 
