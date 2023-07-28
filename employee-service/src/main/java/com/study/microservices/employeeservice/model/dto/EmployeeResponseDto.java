@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Builder
 public record EmployeeResponseDto(
-        UUID Id,
+        UUID id,
         String name,
         String surname,
         LocalDate birthDate,

@@ -15,7 +15,7 @@ public class DtoUtils {
 
     public static EmployeeResponseDto getEmployeeResponseDtoFromEntity(EmployeeEntity employeeEntity) {
         return EmployeeResponseDto.builder()
-                .Id(employeeEntity.getId())
+                .id(employeeEntity.getId())
                 .name(employeeEntity.getName())
                 .surname(employeeEntity.getSurname())
                 .birthDate(employeeEntity.getBirthDate())

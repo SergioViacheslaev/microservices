@@ -32,16 +32,16 @@ public class EmployeeControllerWebMvcTest {
     private static final String API_URL = "/api/v1/employees";
 
     @Autowired
-    private MockMvc mockMvc;
+    MockMvc mockMvc;
 
     @Autowired
-    private ObjectMapper objectMapper;
+    ObjectMapper objectMapper;
 
     @MockBean
-    private EmployeeService employeeService;
+    EmployeeService employeeService;
 
     @Test
-    @DisplayName("Должен создать нового Employee")
+    @DisplayName("Должен создать нового сотрудника")
     void should_create_new_employee() throws Exception {
         val employeeRequestDto = createEmployeeRequestDto();
 
@@ -91,7 +91,7 @@ public class EmployeeControllerWebMvcTest {
     }
 
     @Test
-    @DisplayName("Должен вернуть всех Employee")
+    @DisplayName("Должен вернуть всех сотрудников")
     void should_get_all_employees() throws Exception {
         when(employeeService.getAllEmployees()).thenReturn(List.of(createEmployeeResponseDto(createEmployeeEntity())));
 

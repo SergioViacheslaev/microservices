@@ -67,7 +67,7 @@ public class EmployeeTestDataUtils {
 
     public static EmployeeResponseDto createEmployeeResponseDto(EmployeeEntity employeeEntity) {
         return EmployeeResponseDto.builder()
-                .Id(employeeEntity.getId())
+                .id(employeeEntity.getId())
                 .name(employeeEntity.getName())
                 .surname(employeeEntity.getSurname())
                 .birthDate(employeeEntity.getBirthDate())
