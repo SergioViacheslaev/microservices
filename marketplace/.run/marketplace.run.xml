@@ -1,0 +1,8 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="marketplace" type="CompoundRunConfigurationType">
+    <toRun name="UserDataServiceApplication" type="SpringBootApplicationConfigurationType" />
+    <toRun name="UserPhotosServiceApplication" type="SpringBootApplicationConfigurationType" />
+    <toRun name="UserProfileServiceApplication" type="SpringBootApplicationConfigurationType" />
+    <method v="2" />
+  </configuration>
+</component>
