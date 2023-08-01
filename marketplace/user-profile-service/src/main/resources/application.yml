@@ -5,3 +5,5 @@ spring:
   devtools:
     livereload:
       enabled: false
+  webflux:
+    base-path: /marketplace
