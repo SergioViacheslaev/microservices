@@ -3,7 +3,7 @@ package com.marketplace.userdataservice.utils
 import com.marketplace.userdataservice.model.dto.*
 
 
-fun getDummyUserDataResponseDto() = UserDataResponseDto(
+fun getDummyUserDataResponseDto() = RandomUserDataResponseDto(
     7486,
     "9d0a0f6b-e8eb-4391-933c-5ad3e0758223",
     "VLTPKvs5hW",

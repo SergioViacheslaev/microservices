@@ -1,4 +1,4 @@
-package com.marketplace.userphotosservice
+package com.marketplace.userordersservice
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
