@@ -1,11 +1,11 @@
-package com.marketplace.userphotosservice
+package com.marketplace.userordersservice
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class UserPhotosServiceApplication
+class UserOrdersServiceApplication
 
 fun main(args: Array<String>) {
-    runApplication<UserPhotosServiceApplication>(*args)
+    runApplication<UserOrdersServiceApplication>(*args)
 }
