@@ -19,15 +19,20 @@ class UserDataService(
     private val log = LoggerFactory.getLogger(javaClass)
 
     fun getRandomUserAndSaveData(): Mono<RandomUserDataResponseDto> {
-        return webClient.get().uri("/users").retrieve().bodyToMono(RandomUserDataResponseDto::class.java)
+        return webClient.get()
+            .uri("/users")
+            .retrieve()
+            .bodyToMono(RandomUserDataResponseDto::class.java)
             .onErrorMap { error -> RuntimeException("Error getting random user data from external service", error) }
-            .doOnNext { log.info("Received random user: $it") }.zipWhen {
+            .doOnNext { log.info("Received random user: $it") }
+            .zipWhen {
                 userDataRepository.save(
                     UserDataEntity(
                         UUID.randomUUID(), it.firstName, it.lastName, it.email, it.avatar
                     )
                 ).doOnNext { log.info("Saved user data entity: $it") }
-            }.map {
+            }
+            .map {
                 val userDataResponseDto = it.t1
                 userDataResponseDto
             }

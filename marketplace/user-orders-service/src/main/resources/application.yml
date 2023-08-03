@@ -5,3 +5,9 @@ spring:
   docker:
     compose:
       enabled: false
+  webflux:
+    base-path: /marketplace
+  devtools:
+    livereload:
+      enabled: false
+
