@@ -15,11 +15,14 @@ spring:
       properties:
         spring.json.trusted.packages: com.study.microservices.salaryprocessingservice.model.dto
         spring.json.value.default.type: com.study.microservices.salaryprocessingservice.model.dto.EmployeePaymentDto
+      enable-auto-commit: false
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       properties:
         spring.json.add.type.headers: false
+    listener:
+      ack-mode: manual_immediate
   cloud:
     openfeign:
       circuitbreaker:
