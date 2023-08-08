@@ -18,7 +18,7 @@ public class SalaryProcessingListeners {
     @KafkaListener(topics = SALARY_PAYMENT_TOPIC, groupId = SALARY_PAYMENT_CONSUMER_GROUP)
     public void consume(
             @Payload EmployeePaymentDto employeePayment,
-            @Header(KafkaHeaders.RECEIVED_KEY) String key
+            @Header(value = KafkaHeaders.RECEIVED_KEY, required = false) String key
     ) {
         log.info("Consumed key: {}", key);
         log.info("Consumed employeePayment: {}", employeePayment);
