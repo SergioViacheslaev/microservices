@@ -4,6 +4,7 @@ import lombok.Builder;
 
 @Builder
 public record EmployeePaymentDto(
+        String paymentId,
         String name,
         String sureName,
         String passportNumber,

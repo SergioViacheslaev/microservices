@@ -6,10 +6,11 @@ import com.study.microservices.salaryprocessingservice.model.dto.EmployeePayment
 import com.study.microservices.salaryprocessingservice.model.dto.EmployeePhoneDto;
 import com.study.microservices.salaryprocessingservice.model.dto.EmployeeResponseDto;
 import lombok.experimental.UtilityClass;
+import net.datafaker.Faker;
 
 import java.time.LocalDate;
 import java.util.List;
-import net.datafaker.Faker;
+import java.util.UUID;
 
 @UtilityClass
 public class DtoUtils {
@@ -19,6 +20,7 @@ public class DtoUtils {
     public static List<EmployeePaymentDto> getEmployeePayments(List<EmployeeResponseDto> employees) {
         return employees.stream()
                 .map(employee -> EmployeePaymentDto.builder()
+                        .paymentId(employee.Id().toString())
                         .name(employee.name())
                         .sureName(employee.surname())
                         .passportNumber(employee.passport().passportNumber())
@@ -28,6 +30,7 @@ public class DtoUtils {
 
     public static EmployeeResponseDto createRandomDummyEmployeeResponseDto() {
         return EmployeeResponseDto.builder()
+                .Id(UUID.randomUUID())
                 .name(faker.name().firstName())
                 .surname(faker.name().lastName())
                 .birthDate(LocalDate.of(1987, 1, 15))
@@ -42,7 +45,7 @@ public class DtoUtils {
                 .departments(List.of(EmployeeDepartment.builder()
                         .departmentName("Управление автоматизации")
                         .build()))
-                .monthlySalary(String.valueOf(faker.number().numberBetween(100000,500000)))
+                .monthlySalary(String.valueOf(faker.number().numberBetween(100000, 500000)))
                 .payrollAccount(faker.idNumber().peselNumber())
                 .build();
     }
