@@ -8,23 +8,31 @@ import static java.time.Duration.ofSeconds;
 import com.study.microservices.salaryprocessingservice.api.EmployeeServiceApiClient;
 import com.study.microservices.salaryprocessingservice.model.dto.EmployeePaymentDto;
 import java.util.Random;
-import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class SalaryProcessingService {
 
     private final EmployeeServiceApiClient employeeServiceClient;
     private final KafkaTemplate<String, EmployeePaymentDto> kafkaTemplate;
 
-    @Transactional
+    public SalaryProcessingService(
+            @Qualifier("com.study.microservices.salaryprocessingservice.api.EmployeeServiceApiClient")
+            EmployeeServiceApiClient employeeServiceClient,
+            KafkaTemplate<String, EmployeePaymentDto> kafkaTemplate
+    ) {
+        this.employeeServiceClient = employeeServiceClient;
+        this.kafkaTemplate = kafkaTemplate;
+    }
+
+    @Transactional("kafkaTransactionManager")
     public void processEmployeesSalary() {
         val employees = employeeServiceClient.getAllEmployees();
         val employeesPayments = getEmployeePayments(employees);
@@ -34,15 +42,19 @@ public class SalaryProcessingService {
 
     @SneakyThrows
     private void sendEmployeePayment(String topicName, String key, EmployeePaymentDto employeePayment) {
+        log.info("Sending thread {}", Thread.currentThread());
         log.info("Sending employeePayment {}", employeePayment);
         val sendResultAsync = kafkaTemplate.send(topicName, key, employeePayment);
 
         sendResultAsync.whenComplete((sendResult, exception) -> {
+            final var partition = sendResult.getRecordMetadata().partition();
             if (exception != null) {
-                log.error("Error sending employee payment {} to Kafka topic: {}, key: {} ", employeePayment, topicName, key);
+                log.error("Error producer sending employee payment {} to Kafka topic: {},  partition: {}, key: {} ", employeePayment, topicName,
+                        partition, key);
                 sendResultAsync.completeExceptionally(exception);
             } else {
-                log.info("Sent employee payment {} to Kafka topic: {}, key: {} ", employeePayment, topicName, key);
+                log.info("Producer sent employee payment {} to Kafka topic: {}, partition: {}, key: {} ", employeePayment, topicName,
+                        partition, key);
                 sendResultAsync.complete(sendResult);
             }
         });
