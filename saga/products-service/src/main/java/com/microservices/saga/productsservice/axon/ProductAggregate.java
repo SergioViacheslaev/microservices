@@ -1,7 +1,7 @@
-package com.microservices.saga.productsservice.model.axon;
+package com.microservices.saga.productsservice.axon;
 
-import com.microservices.saga.productsservice.model.axon.command.CreateProductCommand;
-import com.microservices.saga.productsservice.model.axon.event.ProductCreatedEvent;
+import com.microservices.saga.productsservice.axon.command.CreateProductCommand;
+import com.microservices.saga.productsservice.axon.event.ProductCreatedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.axonframework.commandhandling.CommandHandler;

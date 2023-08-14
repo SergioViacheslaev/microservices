@@ -1,4 +1,4 @@
-package com.microservices.saga.productsservice.model.axon.command;
+package com.microservices.saga.productsservice.axon.command;
 
 import lombok.Builder;
 import lombok.Data;

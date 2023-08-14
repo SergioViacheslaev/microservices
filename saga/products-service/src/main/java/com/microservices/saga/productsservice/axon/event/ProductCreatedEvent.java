@@ -1,4 +1,4 @@
-package com.microservices.saga.productsservice.model.axon.event;
+package com.microservices.saga.productsservice.axon.event;
 
 import lombok.Data;
 

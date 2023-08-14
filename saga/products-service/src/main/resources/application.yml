@@ -8,5 +8,24 @@ eureka:
 spring:
   application:
     name: products-service
+  datasource:
+    url: jdbc:h2:file:~/products_db;AUTO_SERVER=true
+    username: sa
+    password: sa
+    driverClassName: org.h2.Driver
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+#        format_sql: true
+#        show_sql: true
+  h2:
+    console:
+      enabled: true
+      settings:
+        web-allow-others: true
 server:
   port: 0
+

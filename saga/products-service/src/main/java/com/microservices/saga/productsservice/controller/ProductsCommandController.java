@@ -1,6 +1,6 @@
 package com.microservices.saga.productsservice.controller;
 
-import com.microservices.saga.productsservice.model.axon.command.CreateProductCommand;
+import com.microservices.saga.productsservice.axon.command.CreateProductCommand;
 import com.microservices.saga.productsservice.model.dto.CreateProductRequestDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +44,8 @@ public class ProductsCommandController {
             commandSendResponse = e.getLocalizedMessage();
         }
 
-        return "%s on port %s created new product,\nAxon response: %s".formatted(appName, env.getProperty("local.server.port"), commandSendResponse);
+        return "%s on port %s created new product %s,\nAxon response: %s"
+                .formatted(appName, env.getProperty("local.server.port"), createProductRequestDto.title(), commandSendResponse);
     }
 
 
