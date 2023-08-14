@@ -28,7 +28,6 @@ public class ProductsCommandController {
     @PostMapping
     public String createProduct(@Valid @RequestBody CreateProductRequestDto createProductRequestDto,
                                 @Value("${spring.application.name}") String appName) {
-
         log.info("Received createProduct request {}", createProductRequestDto);
         val createProductCommand = CreateProductCommand.builder()
                 .productId(UUID.randomUUID().toString())
