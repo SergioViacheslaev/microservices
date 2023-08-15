@@ -36,12 +36,7 @@ public class ProductsCommandController {
                 .quantity(createProductRequestDto.quantity())
                 .build();
 
-        String commandSendResponse;
-        try {
-            commandSendResponse = commandGateway.sendAndWait(createProductCommand);
-        } catch (Exception e) {
-            commandSendResponse = e.getLocalizedMessage();
-        }
+        val commandSendResponse = commandGateway.sendAndWait(createProductCommand);
 
         return "%s on port %s,\nAxon response: %s".formatted(appName, env.getProperty("local.server.port"), commandSendResponse);
     }

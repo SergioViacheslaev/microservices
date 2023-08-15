@@ -36,7 +36,7 @@ public class CreateProductCommandInterceptor implements MessageDispatchIntercept
 
                 if (productLookupEntity != null) {
                     throw new IllegalStateException(
-                            String.format("Product with productId %s or title %s already exist", createProductCommand.getProductId(), createProductCommand.getTitle())
+                            String.format("Product with productId %s or title %s already exists", createProductCommand.getProductId(), createProductCommand.getTitle())
                     );
                 }
             }
