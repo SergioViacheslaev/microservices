@@ -5,5 +5,4 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("com.google.guava:guava:32.1.2-jre")
     runtimeOnly ("com.h2database:h2")
-    developmentOnly("org.springframework.boot:spring-boot-devtools")
 }
