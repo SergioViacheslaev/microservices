@@ -43,8 +43,7 @@ public class ProductsCommandController {
             commandSendResponse = e.getLocalizedMessage();
         }
 
-        return "%s on port %s created new product %s,\nAxon response: %s"
-                .formatted(appName, env.getProperty("local.server.port"), createProductRequestDto.title(), commandSendResponse);
+        return "%s on port %s,\nAxon response: %s".formatted(appName, env.getProperty("local.server.port"), commandSendResponse);
     }
 
 

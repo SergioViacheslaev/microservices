@@ -24,8 +24,6 @@ public class ProductEventsHandler {
         BeanUtils.copyProperties(event, productEntity);
 
         productsRepository.save(productEntity);
-
-        log.info("productEntity saved to database: {}", productEntity);
     }
 
 }

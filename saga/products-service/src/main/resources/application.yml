@@ -19,8 +19,8 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
-#        format_sql: true
-#        show_sql: true
+  #        format_sql: true
+  #        show_sql: true
   h2:
     console:
       enabled: true
@@ -31,4 +31,8 @@ server:
   error:
     include-message: always
     include-binding-errors: always
-
+axon:
+  eventhandling:
+    processors:
+      product-group:
+        mode: subscribing
