@@ -69,10 +69,9 @@ public class EmployeeEntity extends AuditedEntity {
     @Column(name = "payroll_account")
     private String payrollAccount;
 
-    @OneToOne(mappedBy = "employee", cascade = ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "employee", cascade = ALL, fetch = FetchType.EAGER)
     @PrimaryKeyJoinColumn
-    @LazyToOne(LazyToOneOption.NO_PROXY)
-    @ToString.Exclude
+//    @LazyToOne(LazyToOneOption.NO_PROXY)
     private EmployeePassportEntity passport;
 
     @OneToMany(cascade = ALL, mappedBy = "employee", fetch = FetchType.LAZY)
