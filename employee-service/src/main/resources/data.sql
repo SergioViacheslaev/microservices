@@ -44,4 +44,6 @@ VALUES ('b16355a9-3edf-418d-bafc-52e46f6703e1', 1234567891, 'Улица Пушк
 
 INSERT INTO employees_departments (employee_id, department_id)
 VALUES ('b16355a9-3edf-418d-bafc-52e46f6703e1', 100),
-       ('b16355a9-3edf-418d-bafc-52e46f6703e1', 101);
+       ('b16355a9-3edf-418d-bafc-52e46f6703e1', 101),
+       ('b16355a9-3edf-418d-bafc-52e46f6703e2', 100),
+       ('b16355a9-3edf-418d-bafc-52e46f6703e2', 101);

@@ -1,6 +1,5 @@
 package com.study.microservices.employeeservice.model.entity;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -16,19 +15,22 @@ import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
+import org.hibernate.proxy.HibernateProxy;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -38,11 +40,12 @@ import static jakarta.persistence.CascadeType.PERSIST;
 import static java.util.Objects.isNull;
 
 @Entity
-@Data
+@Getter
+@Setter
+@ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @Table(name = "employees")
 public class EmployeeEntity extends AuditedEntity {
 
@@ -60,18 +63,20 @@ public class EmployeeEntity extends AuditedEntity {
     @Column(name = "employee_birth_date")
     private LocalDate birthDate;
 
-    @Column(name = "monthly_salary",precision = 10, scale = 3)
+    @Column(name = "monthly_salary", precision = 10, scale = 3)
     private BigDecimal monthlySalary;
 
     @Column(name = "payroll_account")
     private String payrollAccount;
 
-    @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "employee", cascade = ALL, fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn
     @LazyToOne(LazyToOneOption.NO_PROXY)
+    @ToString.Exclude
     private EmployeePassportEntity passport;
 
     @OneToMany(cascade = ALL, mappedBy = "employee", fetch = FetchType.LAZY)
+    @ToString.Exclude
     private List<EmployeePhoneEntity> phones;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {
@@ -83,6 +88,7 @@ public class EmployeeEntity extends AuditedEntity {
     @JoinTable(name = "employees_departments",
             joinColumns = @JoinColumn(name = "employee_id"),
             inverseJoinColumns = @JoinColumn(name = "department_id"))
+    @ToString.Exclude
     private Set<EmployeeDepartmentEntity> departments = new HashSet<>();
 
     /**
@@ -120,5 +126,21 @@ public class EmployeeEntity extends AuditedEntity {
 
     public Set<EmployeeDepartmentEntity> getDepartments() {
         return isNull(departments) ? new HashSet<>() : departments;
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
+        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
+        if (thisEffectiveClass != oEffectiveClass) return false;
+        EmployeeEntity that = (EmployeeEntity) o;
+        return getId() != null && Objects.equals(getId(), that.getId());
+    }
+
+    @Override
+    public final int hashCode() {
+        return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
     }
 }
