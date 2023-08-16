@@ -12,7 +12,7 @@ import java.util.Objects;
 /**
  * Stores unique productId and title in productlookup table
  *
- * @see com.microservices.saga.productsservice.axon.interceptors.CreateProductCommandInterceptor
+ * @see com.microservices.saga.productsservice.axon.interceptor.CreateProductCommandInterceptor
  */
 @Entity
 @Getter

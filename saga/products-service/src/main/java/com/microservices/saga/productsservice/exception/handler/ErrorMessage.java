@@ -1,4 +1,4 @@
-package com.microservices.saga.productsservice.exception.handlers;
+package com.microservices.saga.productsservice.exception.handler;
 
 import java.util.Date;
 

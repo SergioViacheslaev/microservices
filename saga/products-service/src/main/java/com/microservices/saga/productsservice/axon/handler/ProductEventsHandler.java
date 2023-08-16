@@ -1,7 +1,7 @@
-package com.microservices.saga.productsservice.axon.handlers;
+package com.microservices.saga.productsservice.axon.handler;
 
 import com.microservices.saga.productsservice.axon.event.ProductCreatedEvent;
-import com.microservices.saga.productsservice.exception.handlers.ProductsServiceEventsErrorHandler;
+import com.microservices.saga.productsservice.exception.handler.ProductsServiceEventsErrorHandler;
 import com.microservices.saga.productsservice.model.entity.ProductEntity;
 import com.microservices.saga.productsservice.repository.ProductsRepository;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +37,7 @@ public class ProductEventsHandler {
 
         productsRepository.save(productEntity);
 
-        if (true) throw new RuntimeException("Test rollback exception");
+//        if (true) throw new RuntimeException("Test rollback exception");
     }
 
 }

@@ -1,4 +1,4 @@
-package com.microservices.saga.productsservice.axon.interceptors;
+package com.microservices.saga.productsservice.axon.interceptor;
 
 import com.microservices.saga.productsservice.axon.command.CreateProductCommand;
 import com.microservices.saga.productsservice.axon.lookup.ProductLookupRepository;

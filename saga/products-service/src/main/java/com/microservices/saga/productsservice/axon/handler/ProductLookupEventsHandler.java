@@ -1,7 +1,7 @@
-package com.microservices.saga.productsservice.axon.handlers;
+package com.microservices.saga.productsservice.axon.handler;
 
 import com.microservices.saga.productsservice.axon.event.ProductCreatedEvent;
-import com.microservices.saga.productsservice.axon.interceptors.CreateProductCommandInterceptor;
+import com.microservices.saga.productsservice.axon.interceptor.CreateProductCommandInterceptor;
 import com.microservices.saga.productsservice.axon.lookup.ProductLookupEntity;
 import com.microservices.saga.productsservice.axon.lookup.ProductLookupRepository;
 import lombok.RequiredArgsConstructor;

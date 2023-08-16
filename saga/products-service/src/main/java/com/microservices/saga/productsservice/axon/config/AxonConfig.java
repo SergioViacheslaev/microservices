@@ -1,7 +1,7 @@
 package com.microservices.saga.productsservice.axon.config;
 
-import com.microservices.saga.productsservice.axon.interceptors.CreateProductCommandInterceptor;
-import com.microservices.saga.productsservice.exception.handlers.ProductsServiceEventsErrorHandler;
+import com.microservices.saga.productsservice.axon.interceptor.CreateProductCommandInterceptor;
+import com.microservices.saga.productsservice.exception.handler.ProductsServiceEventsErrorHandler;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.config.EventProcessingConfigurer;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.microservices.saga.productsservice.axon.handlers;
+package com.microservices.saga.productsservice.axon.handler;
 
 import com.microservices.saga.productsservice.axon.query.FindProductsQuery;
 import com.microservices.saga.productsservice.model.dto.ProductResponseDto;
