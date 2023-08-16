@@ -45,7 +45,7 @@ public class EmployeePassportEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "employee_id")
-    @LazyToOne(LazyToOneOption.NO_PROXY)
+//    @LazyToOne(LazyToOneOption.NO_PROXY)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private EmployeeEntity employee;

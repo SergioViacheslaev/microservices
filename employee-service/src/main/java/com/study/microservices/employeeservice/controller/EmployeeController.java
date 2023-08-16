@@ -1,6 +1,7 @@
 package com.study.microservices.employeeservice.controller;
 
 import com.study.microservices.employeeservice.model.dto.EmployeeCreateRequestDto;
+import com.study.microservices.employeeservice.model.dto.EmployeeMainInfoResponseDto;
 import com.study.microservices.employeeservice.model.dto.EmployeeResponseDto;
 import com.study.microservices.employeeservice.model.dto.EmployeeUpdateRequestDto;
 import com.study.microservices.employeeservice.service.EmployeeService;
@@ -13,16 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -76,6 +68,15 @@ public class EmployeeController {
                                                                            @RequestParam(value = "page", defaultValue = "0") Integer page,
                                                                            @RequestParam(value = "size", defaultValue = "3") Integer size) {
         return new ResponseEntity<>(employeeService.getAllEmployeesByNameSortedByBirthDate(employeeName, page, size), HttpStatus.OK);
+    }
+
+    @Operation(summary = "Find Employee by id", description = "Get only Employee entity main info")
+    @GetMapping(path = "/id/{employeeId}")
+    public ResponseEntity<EmployeeMainInfoResponseDto> findEmployeeById(
+            @Parameter(description = "Searched employee's id", schema = @Schema(defaultValue = "b16355a9-3edf-418d-bafc-52e46f6703e1"))
+            @PathVariable String employeeId) {
+        log.info("Received findEmployeeById {} request", employeeId);
+        return new ResponseEntity<>(employeeService.findEmployeeById(employeeId), HttpStatus.OK);
     }
 
     @Operation(summary = "Find Employee by filter", description = "Find Employee by name and surname")

@@ -4,6 +4,8 @@ import com.study.microservices.employeeservice.exception.EmployeeFoundException;
 import com.study.microservices.employeeservice.exception.EmployeeNotFoundException;
 import com.study.microservices.employeeservice.exception.EmployeePhoneFoundException;
 import com.study.microservices.employeeservice.model.dto.EmployeeCreateRequestDto;
+import com.study.microservices.employeeservice.model.dto.EmployeeMainInfoResponseDto;
+import com.study.microservices.employeeservice.model.dto.EmployeePassport;
 import com.study.microservices.employeeservice.model.dto.EmployeeResponseDto;
 import com.study.microservices.employeeservice.model.dto.EmployeeUpdateRequestDto;
 import com.study.microservices.employeeservice.model.dto.PhoneType;
@@ -31,6 +33,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.study.microservices.employeeservice.utils.DtoUtils.getEmployeeResponseDtoFromEntity;
 
@@ -164,6 +167,30 @@ public class EmployeeService {
         log.info("Found employeeEntity {}", employeeEntity);
 
         return getEmployeeResponseDtoFromEntity(employeeEntity);
+    }
+
+    @Transactional(readOnly = true)
+    public EmployeeMainInfoResponseDto findEmployeeById(String employeeId) {
+        val employeeEntityOptional = employeeRepository.findById(UUID.fromString(employeeId));
+        if (employeeEntityOptional.isEmpty()) {
+            throw new EmployeeNotFoundException(String.format("Employee with such id %s not found", employeeId));
+        }
+
+        val employeeEntity = employeeEntityOptional.get();
+        log.info("Found employeeEntity {}", employeeEntity);
+
+        return EmployeeMainInfoResponseDto.builder()
+                .id(employeeEntity.getId())
+                .name(employeeEntity.getName())
+                .surname(employeeEntity.getSurname())
+                .birthDate(employeeEntity.getBirthDate())
+                .payrollAccount(employeeEntity.getPayrollAccount())
+                .monthlySalary(DtoUtils.getFormattedSalary(employeeEntity.getMonthlySalary()))
+                .passport(EmployeePassport.builder()
+                        .passportNumber(String.valueOf(employeeEntity.getPassport().getPassportNumber()))
+                        .registrationAddress(employeeEntity.getPassport().getRegistrationAddress())
+                        .build())
+                .build();
     }
 
     private void validateEmployeeCreateRequestDto(EmployeeCreateRequestDto employeeCreateRequestDto) {
