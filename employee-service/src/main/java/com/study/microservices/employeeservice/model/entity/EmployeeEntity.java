@@ -49,7 +49,7 @@ public class EmployeeEntity extends AuditedEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "employee_id")
-    private UUID Id;
+    private UUID id;
 
     @Column(name = "employee_name")
     private String name;

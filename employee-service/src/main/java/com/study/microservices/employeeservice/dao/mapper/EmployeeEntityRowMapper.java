@@ -11,7 +11,7 @@ public class EmployeeEntityRowMapper implements RowMapper<EmployeeEntity> {
     @Override
     public EmployeeEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
         return EmployeeEntity.builder()
-                .Id(rs.getObject("employee_id", java.util.UUID.class))
+                .id(rs.getObject("employee_id", java.util.UUID.class))
                 .name(rs.getString("employee_name"))
                 .surname(rs.getString("employee_surname"))
                 .birthDate(rs.getTimestamp("employee_birth_date").toLocalDateTime().toLocalDate())
