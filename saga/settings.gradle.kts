@@ -4,6 +4,7 @@ include(
     "discovery-service",
     "gateway-service",
     "products-service",
-    "orders-service"
+    "orders-service",
+    "common"
 )
 

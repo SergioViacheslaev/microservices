@@ -45,3 +45,5 @@ subprojects {
 tasks.bootJar {
     enabled = false
 }
+
+//gradle clean build -x test
