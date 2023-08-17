@@ -37,6 +37,8 @@ public class ProductEventsHandler {
 
         productsRepository.save(productEntity);
 
+        log.info("productEntity saved to DB: {}", productEntity);
+
 //        if (true) throw new RuntimeException("Test rollback exception");
     }
 

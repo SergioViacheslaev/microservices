@@ -34,5 +34,5 @@ server:
 axon:
   eventhandling:
     processors:
-      product-group:
+      order-group:
         mode: subscribing
