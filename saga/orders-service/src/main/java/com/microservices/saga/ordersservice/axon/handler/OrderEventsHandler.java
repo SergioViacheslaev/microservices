@@ -1,5 +1,6 @@
 package com.microservices.saga.ordersservice.axon.handler;
 
+import com.microservices.saga.ordersservice.axon.event.OrderApprovedEvent;
 import com.microservices.saga.ordersservice.axon.event.OrderCreatedEvent;
 import com.microservices.saga.ordersservice.model.entity.OrderEntity;
 import com.microservices.saga.ordersservice.repository.OrdersRepository;
@@ -27,6 +28,21 @@ public class OrderEventsHandler {
         ordersRepository.save(orderEntity);
 
         log.info("orderEntity saved to DB: {}", orderEntity);
+    }
+
+    @EventHandler
+    public void on(OrderApprovedEvent orderApprovedEvent) {
+        val orderEntity = ordersRepository.findByOrderId(orderApprovedEvent.getOrderId());
+
+        if (orderEntity == null) {
+            // TODO: Do something about it
+            return;
+        }
+
+        orderEntity.setOrderStatus(orderApprovedEvent.getOrderStatus());
+        ordersRepository.save(orderEntity);
+
+        log.info("Updated order {} status to {}", orderEntity.getOrderId(), orderEntity.getOrderStatus());
     }
 
 
