@@ -2,8 +2,10 @@ package com.microservices.saga.ordersservice.axon;
 
 import com.microservices.saga.ordersservice.axon.command.ApproveOrderCommand;
 import com.microservices.saga.ordersservice.axon.command.CreateOrderCommand;
+import com.microservices.saga.ordersservice.axon.command.RejectOrderCommand;
 import com.microservices.saga.ordersservice.axon.event.OrderApprovedEvent;
 import com.microservices.saga.ordersservice.axon.event.OrderCreatedEvent;
+import com.microservices.saga.ordersservice.axon.event.OrderRejectedEvent;
 import com.microservices.saga.ordersservice.model.OrderStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -41,6 +43,13 @@ public class OrderAggregate {
         AggregateLifecycle.apply(orderApprovedEvent);
     }
 
+    @CommandHandler
+    public void handle(RejectOrderCommand rejectOrderCommand) {
+        val orderRejectedEvent = new OrderRejectedEvent(rejectOrderCommand.getOrderId(), rejectOrderCommand.getReason());
+
+        AggregateLifecycle.apply(orderRejectedEvent);
+    }
+
     @EventSourcingHandler
     public void on(OrderCreatedEvent orderCreatedEvent) {
         this.orderId = orderCreatedEvent.getOrderId();
@@ -55,4 +64,10 @@ public class OrderAggregate {
     public void on(OrderApprovedEvent orderApprovedEvent) {
         this.orderStatus = orderApprovedEvent.getOrderStatus();
     }
+
+    @EventSourcingHandler
+    public void on(OrderRejectedEvent orderRejectedEvent) {
+        this.orderStatus = orderRejectedEvent.getOrderStatus();
+    }
+
 }

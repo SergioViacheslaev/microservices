@@ -1,5 +1,6 @@
 package com.microservices.saga.productsservice.axon.handler;
 
+import com.microservices.saga.common.event.ProductReservationCancelledEvent;
 import com.microservices.saga.common.event.ProductReservedEvent;
 import com.microservices.saga.productsservice.axon.event.ProductCreatedEvent;
 import com.microservices.saga.productsservice.exception.handler.ProductsServiceEventsErrorHandler;
@@ -47,14 +48,28 @@ public class ProductEventsHandler {
     @EventHandler
     public void on(ProductReservedEvent productReservedEvent) {
         val productEntity = productsRepository.findByProductId(productReservedEvent.getProductId());
-        log.info("ProductReservedEvent: Current product quantity " + productEntity.getQuantity());
+        log.info("ProductReservedEvent: Current product quantity {}", productEntity.getQuantity());
 
         productEntity.setQuantity(productEntity.getQuantity() - productReservedEvent.getQuantity());
         productsRepository.save(productEntity);
 
-        log.info("ProductReservedEvent: New product quantity " + productEntity.getQuantity());
-        log.info("ProductReservedEvent is called for productId:" + productReservedEvent.getProductId() +
-                " and orderId: " + productReservedEvent.getOrderId());
+        log.info("ProductReservedEvent: New product quantity {}", productEntity.getQuantity());
+        log.info("ProductReservedEvent is called for productId: {} and orderId: {}",
+                productReservedEvent.getProductId(), productReservedEvent.getOrderId());
+    }
+
+
+    @EventHandler
+    public void on(ProductReservationCancelledEvent productReservationCancelledEvent) {
+        val currentlyStoredProduct = productsRepository.findByProductId(productReservationCancelledEvent.getProductId());
+        log.info("ProductReservationCancelledEvent: Current product quantity {}", currentlyStoredProduct.getQuantity());
+
+        val updatedQuantity = currentlyStoredProduct.getQuantity() + productReservationCancelledEvent.getQuantity();
+        currentlyStoredProduct.setQuantity(updatedQuantity);
+
+        productsRepository.save(currentlyStoredProduct);
+
+        log.info("ProductReservationCancelledEvent: New product quantity {}", currentlyStoredProduct.getQuantity());
     }
 
 

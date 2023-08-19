@@ -6,7 +6,8 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class MockDataUtils {
 
-    public static PaymentDetails getPaymentDetails() {
+    public static PaymentDetails createPaymentDetails() {
+//        throw new RuntimeException("Couldn't fetch paymentDetails"); //test saga rollback
         return PaymentDetails.builder()
                 .cardNumber("42352 422332")
                 .name("Alex")

@@ -24,9 +24,7 @@ public class ProductLookupEventsHandler {
 
     @EventHandler
     public void on(ProductCreatedEvent event) {
-        val productLookupEntity = new ProductLookupEntity(event.getProductId(),
-                event.getTitle());
-
+        val productLookupEntity = new ProductLookupEntity(event.getProductId(), event.getTitle());
         productLookupRepository.save(productLookupEntity);
     }
 

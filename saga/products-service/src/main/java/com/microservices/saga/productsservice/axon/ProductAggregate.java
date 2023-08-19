@@ -1,6 +1,8 @@
 package com.microservices.saga.productsservice.axon;
 
+import com.microservices.saga.common.command.CancelProductReservationCommand;
 import com.microservices.saga.common.command.ReserveProductCommand;
+import com.microservices.saga.common.event.ProductReservationCancelledEvent;
 import com.microservices.saga.common.event.ProductReservedEvent;
 import com.microservices.saga.productsservice.axon.command.CreateProductCommand;
 import com.microservices.saga.productsservice.axon.event.ProductCreatedEvent;
@@ -62,6 +64,19 @@ public class ProductAggregate {
         AggregateLifecycle.apply(productReservedEvent);
     }
 
+    @CommandHandler
+    public void handle(CancelProductReservationCommand cancelProductReservationCommand) {
+        val productReservationCancelledEvent = ProductReservationCancelledEvent.builder()
+                .orderId(cancelProductReservationCommand.getOrderId())
+                .productId(cancelProductReservationCommand.getProductId())
+                .quantity(cancelProductReservationCommand.getQuantity())
+                .reason(cancelProductReservationCommand.getReason())
+                .userId(cancelProductReservationCommand.getUserId())
+                .build();
+
+        AggregateLifecycle.apply(productReservationCancelledEvent);
+    }
+
     @EventSourcingHandler
     public void on(ProductCreatedEvent productCreatedEvent) {
         this.productId = productCreatedEvent.getProductId();
@@ -74,5 +89,12 @@ public class ProductAggregate {
     public void on(ProductReservedEvent productReservedEvent) {
         this.quantity -= productReservedEvent.getQuantity();
     }
+
+
+    @EventSourcingHandler
+    public void on(ProductReservationCancelledEvent productReservationCancelledEvent) {
+        this.quantity += productReservationCancelledEvent.getQuantity();
+    }
+
 
 }

@@ -2,6 +2,7 @@ package com.microservices.saga.ordersservice.axon.handler;
 
 import com.microservices.saga.ordersservice.axon.event.OrderApprovedEvent;
 import com.microservices.saga.ordersservice.axon.event.OrderCreatedEvent;
+import com.microservices.saga.ordersservice.axon.event.OrderRejectedEvent;
 import com.microservices.saga.ordersservice.model.entity.OrderEntity;
 import com.microservices.saga.ordersservice.repository.OrdersRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,7 @@ public class OrderEventsHandler {
         val orderEntity = ordersRepository.findByOrderId(orderApprovedEvent.getOrderId());
 
         if (orderEntity == null) {
-            // TODO: Do something about it
+            // TODO: do something
             return;
         }
 
@@ -45,5 +46,11 @@ public class OrderEventsHandler {
         log.info("Updated order {} status to {}", orderEntity.getOrderId(), orderEntity.getOrderStatus());
     }
 
+    @EventHandler
+    public void on(OrderRejectedEvent orderRejectedEvent) {
+        val orderEntity = ordersRepository.findByOrderId(orderRejectedEvent.getOrderId());
+        orderEntity.setOrderStatus(orderRejectedEvent.getOrderStatus());
+        ordersRepository.save(orderEntity);
+    }
 
 }
