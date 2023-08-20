@@ -11,6 +11,8 @@ import com.microservices.saga.ordersservice.axon.command.RejectOrderCommand;
 import com.microservices.saga.ordersservice.axon.event.OrderApprovedEvent;
 import com.microservices.saga.ordersservice.axon.event.OrderCreatedEvent;
 import com.microservices.saga.ordersservice.axon.event.OrderRejectedEvent;
+import com.microservices.saga.ordersservice.axon.query.FindOrderQuery;
+import com.microservices.saga.ordersservice.model.dto.OrderSummaryDto;
 import com.microservices.saga.ordersservice.util.MockDataUtils;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -18,6 +20,7 @@ import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.modelling.saga.EndSaga;
 import org.axonframework.modelling.saga.SagaEventHandler;
 import org.axonframework.modelling.saga.StartSaga;
+import org.axonframework.queryhandling.QueryUpdateEmitter;
 import org.axonframework.spring.stereotype.Saga;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -29,6 +32,9 @@ public class OrderSaga {
 
     @Autowired
     private transient CommandGateway commandGateway;
+
+    @Autowired
+    private transient QueryUpdateEmitter queryUpdateEmitter;
 
     @StartSaga
     @SagaEventHandler(associationProperty = "orderId")
@@ -86,7 +92,6 @@ public class OrderSaga {
     public void handle(PaymentProcessedEvent paymentProcessedEvent) {
         //If payment processed successfully, send an ApproveOrderCommand
         val approveOrderCommand = new ApproveOrderCommand(paymentProcessedEvent.getOrderId());
-
         commandGateway.send(approveOrderCommand);
     }
 
@@ -94,12 +99,14 @@ public class OrderSaga {
     @SagaEventHandler(associationProperty = "orderId")
     public void handle(OrderApprovedEvent orderApprovedEvent) {
         log.info("Order is approved. Order Saga is complete for orderId: " + orderApprovedEvent.getOrderId());
+        queryUpdateEmitter.emit(FindOrderQuery.class, query -> true, new OrderSummaryDto(orderApprovedEvent.getOrderId(),
+                orderApprovedEvent.getOrderStatus(), "Order is approved"));
+
     }
 
     @SagaEventHandler(associationProperty = "orderId")
     public void handle(ProductReservationCancelledEvent productReservationCancelledEvent) {
         val rejectOrderCommand = new RejectOrderCommand(productReservationCancelledEvent.getOrderId(), productReservationCancelledEvent.getReason());
-
         commandGateway.send(rejectOrderCommand);
     }
 
@@ -107,6 +114,8 @@ public class OrderSaga {
     @SagaEventHandler(associationProperty = "orderId")
     public void handle(OrderRejectedEvent orderRejectedEvent) {
         log.info("Rejected order with id {}, reason {}", orderRejectedEvent.getOrderId(), orderRejectedEvent.getReason());
+        queryUpdateEmitter.emit(FindOrderQuery.class, query -> true, new OrderSummaryDto(orderRejectedEvent.getOrderId(),
+                orderRejectedEvent.getOrderStatus(), orderRejectedEvent.getReason()));
     }
 
     private void cancelProductReservation(ProductReservedEvent productReservedEvent, String reason) {

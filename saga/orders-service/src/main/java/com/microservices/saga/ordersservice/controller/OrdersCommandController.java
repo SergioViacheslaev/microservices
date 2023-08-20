@@ -1,16 +1,18 @@
 package com.microservices.saga.ordersservice.controller;
 
 import com.microservices.saga.ordersservice.axon.command.CreateOrderCommand;
+import com.microservices.saga.ordersservice.axon.query.FindOrderQuery;
 import com.microservices.saga.ordersservice.model.OrderStatus;
 import com.microservices.saga.ordersservice.model.dto.OrderCreateRequestDto;
+import com.microservices.saga.ordersservice.model.dto.OrderSummaryDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.axonframework.commandhandling.gateway.CommandGateway;
+import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.queryhandling.QueryGateway;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
+import org.axonframework.queryhandling.SubscriptionQueryResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,12 +28,9 @@ public class OrdersCommandController {
 
     private final CommandGateway commandGateway;
     private final QueryGateway queryGateway;
-    private final Environment env;
-
 
     @PostMapping
-    public String createOrder(@Valid @RequestBody OrderCreateRequestDto orderCreateRequestDto,
-                              @Value("${spring.application.name}") String appName) {
+    public OrderSummaryDto createOrder(@Valid @RequestBody OrderCreateRequestDto orderCreateRequestDto) {
         log.info("Received createOrder request {}", orderCreateRequestDto);
 
         val userId = "27b95829-4f3f-4ddf-8983-151ba010e35b";
@@ -45,9 +44,12 @@ public class OrdersCommandController {
                 .orderStatus(OrderStatus.CREATED)
                 .build();
 
-        val commandSendResponse = commandGateway.sendAndWait(createOrderCommand);
-
-        return "%s on port %s,\nAxon response: %s".formatted(appName, env.getProperty("local.server.port"), commandSendResponse);
+        try (SubscriptionQueryResult<OrderSummaryDto, OrderSummaryDto> queryResult = queryGateway.subscriptionQuery(
+                new FindOrderQuery(orderId), ResponseTypes.instanceOf(OrderSummaryDto.class),
+                ResponseTypes.instanceOf(OrderSummaryDto.class))) {
+            commandGateway.sendAndWait(createOrderCommand);
+            return queryResult.updates().blockFirst();
+        }
     }
 
 }

@@ -27,12 +27,11 @@ public class CreateProductCommandInterceptor implements MessageDispatchIntercept
     @Override
     public BiFunction<Integer, CommandMessage<?>, CommandMessage<?>> handle(@Nonnull List<? extends CommandMessage<?>> messages) {
         return (index, command) -> {
-            log.info("Intercepted command: " + command.getPayloadType());
+            log.info("Intercepted command: {}", command.getPayloadType());
 
             if (CreateProductCommand.class.equals(command.getPayloadType())) {
                 val createProductCommand = (CreateProductCommand) command.getPayload();
-                val productLookupEntity = productLookupRepository.findByProductIdOrTitle(createProductCommand.getProductId(),
-                        createProductCommand.getTitle());
+                val productLookupEntity = productLookupRepository.findByProductIdOrTitle(createProductCommand.getProductId(), createProductCommand.getTitle());
 
                 if (productLookupEntity != null) {
                     throw new IllegalStateException(
