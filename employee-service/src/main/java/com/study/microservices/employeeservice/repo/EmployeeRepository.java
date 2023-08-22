@@ -31,8 +31,8 @@ public interface EmployeeRepository extends JpaRepository<EmployeeEntity, UUID> 
     @Query(
             value = """ 
                     SELECT e,e_passport, e_phone FROM EmployeeEntity e
-                    left join fetch EmployeePassportEntity e_passport on e.Id = e_passport.employeeId
-                    left join fetch EmployeePhoneEntity e_phone on e.Id = e_phone.employee.Id
+                    left join fetch EmployeePassportEntity e_passport on e.id = e_passport.employeeId
+                    left join fetch EmployeePhoneEntity e_phone on e.id = e_phone.employee.id
                     where e_phone.phoneNumber = :phoneNumber
                     """)
     Optional<EmployeeEntity> findByPhoneNumber(@Param("phoneNumber") String phoneNumber);
@@ -40,10 +40,10 @@ public interface EmployeeRepository extends JpaRepository<EmployeeEntity, UUID> 
     @Query(
             value = """ 
                     SELECT e,e_passport FROM EmployeeEntity e
-                    left join fetch EmployeePassportEntity e_passport on e.Id = e_passport.employeeId
+                    left join fetch EmployeePassportEntity e_passport on e.id = e_passport.employeeId
                     where e_passport.passportNumber = :passportNumber
                     """)
     Optional<EmployeeEntity> findByPassportNumber(@Param("passportNumber") String passportNumber);
 
-    Page<EmployeeEntity> findAllByNameOrderByBirthDate(String employeeName, Pageable page);
+    Page<EmployeeEntity> findAllBySurnameOrderByBirthDate(String employeeSurname, Pageable page);
 }

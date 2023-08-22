@@ -62,12 +62,12 @@ public class EmployeeController {
         return new ResponseEntity<>(employeeService.getAllEmployees(), HttpStatus.OK);
     }
 
-    @Operation(summary = "Find all Employees by name sorted by birthDate")
-    @GetMapping(path = "/{employeeName}")
-    public ResponseEntity<Page<EmployeeResponseDto>> getAllEmployeesByName(@PathVariable String employeeName,
+    @Operation(summary = "Find all Employees by surname sorted by birthDate")
+    @GetMapping(path = "/{employeeSurname}")
+    public ResponseEntity<Page<EmployeeResponseDto>> getAllEmployeesByName(@PathVariable String employeeSurname,
                                                                            @RequestParam(value = "page", defaultValue = "0") Integer page,
                                                                            @RequestParam(value = "size", defaultValue = "3") Integer size) {
-        return new ResponseEntity<>(employeeService.getAllEmployeesByNameSortedByBirthDate(employeeName, page, size), HttpStatus.OK);
+        return new ResponseEntity<>(employeeService.getAllEmployeesBySurnameSortedByBirthDate(employeeSurname, page, size), HttpStatus.OK);
     }
 
     @Operation(summary = "Find Employee by id", description = "Get only Employee entity main info")

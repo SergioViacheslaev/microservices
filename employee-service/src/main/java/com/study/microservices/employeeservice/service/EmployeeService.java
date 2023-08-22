@@ -143,8 +143,8 @@ public class EmployeeService {
     }
 
     @Transactional(readOnly = true)
-    public Page<EmployeeResponseDto> getAllEmployeesByNameSortedByBirthDate(String employeeName, int page, int size) {
-        val employeeResponseDtoList = employeeRepository.findAllByNameOrderByBirthDate(employeeName, PageRequest.of(page, size))
+    public Page<EmployeeResponseDto> getAllEmployeesBySurnameSortedByBirthDate(String employeeName, int page, int size) {
+        val employeeResponseDtoList = employeeRepository.findAllBySurnameOrderByBirthDate(employeeName, PageRequest.of(page, size))
                 .stream()
                 .map(DtoUtils::getEmployeeResponseDtoFromEntity)
                 .toList();
