@@ -1,6 +1,7 @@
 package com.study.microservices.employeeservice.repo;
 
 import com.study.microservices.employeeservice.model.entity.EmployeeEntity;
+import com.study.microservices.employeeservice.repo.projection.EmployeeView;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -13,6 +14,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface EmployeeRepository extends JpaRepository<EmployeeEntity, UUID> {
+
+    Optional<EmployeeView> findEmployeeEntityById(UUID id);
 
     @EntityGraph(
             type = EntityGraph.EntityGraphType.FETCH,
