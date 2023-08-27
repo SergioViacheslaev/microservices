@@ -16,4 +16,9 @@ class DepartmentService(
     fun getAllDepartments(): List<DepartmentResponseDto> {
         return employeeDepartmentRepository.findAll().map { DepartmentResponseDto(it.departmentName) }
     }
+
+    @Transactional
+    fun deleteDepartmentByName(departmentName: String) {
+        return employeeDepartmentRepository.deleteDepartmentByName(departmentName)
+    }
 }
