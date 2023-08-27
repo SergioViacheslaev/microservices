@@ -4,6 +4,7 @@ import com.study.microservices.employeeservice.model.dto.DepartmentResponseDto
 import com.study.microservices.employeeservice.service.DepartmentService
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Schema
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus.NO_CONTENT
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.bind.annotation.RequestMapping
@@ -19,8 +20,11 @@ class DepartmentController(
     val departmentService: DepartmentService
 ) {
 
+    private val log = LoggerFactory.getLogger(javaClass)
+
     @GetMapping
     fun getAllDepartments(): List<DepartmentResponseDto> {
+        log.info("Received getAllDepartments request")
         return departmentService.getAllDepartments()
     }
 
@@ -30,6 +34,7 @@ class DepartmentController(
         @Parameter(schema = Schema(defaultValue = "Управление автоматизации"))
         @PathVariable departmentName: String
     ) {
+        log.info("Received deleteDepartmentByName $departmentName request")
         departmentService.deleteDepartmentByName(departmentName)
     }
 }

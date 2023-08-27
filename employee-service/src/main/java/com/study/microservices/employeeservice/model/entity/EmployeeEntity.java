@@ -86,7 +86,7 @@ public class EmployeeEntity extends AuditedEntity {
             joinColumns = @JoinColumn(name = "employee_id"),
             inverseJoinColumns = @JoinColumn(name = "department_id"))
     @ToString.Exclude
-    private Set<EmployeeDepartmentEntity> departments = new HashSet<>();
+    private Set<EmployeeDepartmentEntity> departments;
 
     /**
      * In bidirectional association:

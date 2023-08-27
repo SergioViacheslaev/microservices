@@ -41,7 +41,7 @@ public class EmployeeDepartmentEntity {
     @ManyToMany(mappedBy = "departments")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private Set<EmployeeEntity> employees = new HashSet<>();
+    private Set<EmployeeEntity> employees;
 
     public Set<EmployeeEntity> getEmployees() {
         return Objects.isNull(employees) ? new HashSet<>() : employees;
