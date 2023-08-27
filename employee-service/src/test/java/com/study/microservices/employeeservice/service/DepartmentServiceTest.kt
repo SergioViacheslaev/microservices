@@ -3,6 +3,7 @@ package com.study.microservices.employeeservice.service
 import com.study.microservices.employeeservice.model.entity.EmployeeDepartmentEntity
 import com.study.microservices.employeeservice.repo.EmployeeDepartmentRepository
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
@@ -23,6 +24,7 @@ class DepartmentServiceTest {
     lateinit var departmentService: DepartmentService
 
     @Test
+    @DisplayName("Должен найти все департаменты")
     fun getAllDepartments() {
         Mockito.`when`(departmentRepository.findAll()).then {
             listOf(
@@ -38,6 +40,7 @@ class DepartmentServiceTest {
     }
 
     @Test
+    @DisplayName("Должен удалить департамент по имени")
     fun deleteDepartmentByName() {
         Mockito.doNothing().`when`(departmentRepository).deleteDepartmentByName(Mockito.any())
 

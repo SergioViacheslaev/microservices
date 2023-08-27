@@ -20,6 +20,7 @@ import com.study.microservices.employeeservice.repo.EmployeeDepartmentRepository
 import com.study.microservices.employeeservice.repo.EmployeePhoneRepository;
 import com.study.microservices.employeeservice.repo.EmployeeRepository;
 import com.study.microservices.employeeservice.utils.DtoUtils;
+import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.context.ApplicationEventPublisher;
@@ -46,17 +47,20 @@ public class EmployeeService {
     private final EmployeePhoneRepository employeePhoneRepository;
     private final EmployeeDepartmentRepository employeeDepartmentRepository;
     private final EmployeeMapper employeeMapper;
+    private final EntityManager entityManager;
 
     public EmployeeService(ApplicationEventPublisher eventPublisher,
                            EmployeeRepository employeeRepository,
                            EmployeePhoneRepository employeePhoneRepository,
                            EmployeeDepartmentRepository employeeDepartmentRepository,
-                           EmployeeMapper employeeMapper) {
+                           EmployeeMapper employeeMapper,
+                           EntityManager entityManager) {
         this.eventPublisher = eventPublisher;
         this.employeeRepository = employeeRepository;
         this.employeePhoneRepository = employeePhoneRepository;
         this.employeeDepartmentRepository = employeeDepartmentRepository;
         this.employeeMapper = employeeMapper;
+        this.entityManager = entityManager;
     }
 
     @Transactional
@@ -123,7 +127,7 @@ public class EmployeeService {
     }
 
     @Transactional
-    public void deleteEmployee(String passportNumber) {
+    public void deleteEmployeeByPassportNumber(String passportNumber) {
         val employeeEntityToDelete = employeeRepository.findByPassportNumber(passportNumber)
                 .orElseThrow(() -> new EmployeeNotFoundException(String.format("Employee with passport number %s not found", passportNumber)));
 
@@ -131,6 +135,17 @@ public class EmployeeService {
 
         eventPublisher.publishEvent(new EmployeeEvent(EmployeeEventType.DELETE.getName(),
                 String.format("сотрудник с номером паспорта %s", passportNumber)));
+    }
+
+    @Transactional
+    public void deleteEmployeeById(String employeeId) {
+        //getReference returns initialized entity in transaction, not proxy
+        val employeeEntityToDelete = entityManager.getReference(EmployeeEntity.class, UUID.fromString(employeeId));
+
+        entityManager.remove(employeeEntityToDelete);
+
+        eventPublisher.publishEvent(new EmployeeEvent(EmployeeEventType.DELETE.getName(),
+                String.format("сотрудник с id %s", employeeId)));
     }
 
     @Transactional(readOnly = true)

@@ -1,55 +1,65 @@
 package com.study.microservices.employeeservice.service;
 
-import com.study.microservices.employeeservice.exception.EmployeeNotFoundException;
+import com.study.microservices.employeeservice.integration.config.IntegrationTestConfiguration;
+import com.study.microservices.employeeservice.integration.config.SpringContextUtils;
 import com.study.microservices.employeeservice.model.dto.EmployeeResponseDto;
+import com.study.microservices.employeeservice.model.mapper.EmployeeMapperImpl;
+import com.study.microservices.employeeservice.objects_utils.EmployeeTestDataUtils;
+import com.study.microservices.employeeservice.repo.EmployeeDepartmentRepository;
+import com.study.microservices.employeeservice.repo.EmployeePhoneRepository;
 import com.study.microservices.employeeservice.repo.EmployeeRepository;
-import lombok.val;
+import com.study.microservices.employeeservice.service.EmployeeService;
+import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Import;
 
-import java.util.Optional;
+import java.util.List;
 
-import static com.study.microservices.employeeservice.objects_utils.EmployeeTestDataUtils.createEmployeeEntity;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest(classes = {
+        EmployeeService.class,
+        EmployeeMapperImpl.class,
+        EntityManager.class,
+        ApplicationContext.class
+})
+@Import(IntegrationTestConfiguration.class)
 class EmployeeServiceTest {
 
-    @Mock
-    EmployeeRepository employeeRepository;
+    @Autowired
+    SpringContextUtils springContextUtils;
 
-    @InjectMocks
+    @Autowired
     EmployeeService employeeService;
 
-    @Test
-    void should_find_employee_by_name_and_surname() {
-        when(employeeRepository.findByNameAndSurname(any(), any())).thenReturn(Optional.of(createEmployeeEntity()));
+    @MockBean
+    EmployeeRepository employeeRepository;
 
-        EmployeeResponseDto employeeResponseDto = employeeService.getEmployeeByNameAndSurname("Alex", "Ivanov");
+    @MockBean
+    EmployeePhoneRepository phoneRepository;
 
-        assertThat(employeeResponseDto.phones().size()).isEqualTo(1);
-        assertEquals("Alex", employeeResponseDto.name());
-        assertEquals("Ivanov", employeeResponseDto.surname());
-        assertEquals("2007-12-03", employeeResponseDto.birthDate().toString());
-        assertEquals("71234567890", employeeResponseDto.phones().get(0).phoneNumber());
-        assertEquals("Рабочий", employeeResponseDto.phones().get(0).phoneType());
-    }
+    @MockBean
+    EmployeeDepartmentRepository departmentRepository;
+
+    @MockBean
+    EntityManager entityManager;
 
     @Test
-    void should_throw_exception_when_employee_not_found() {
-        when(employeeRepository.findByNameAndSurname(any(), any())).thenReturn(Optional.empty());
+    @DisplayName("Должен найти всех Employee")
+    void getAllEmployees() {
+        springContextUtils.printAllBeanDefinitions();
 
-        val employeeNotFoundException = assertThrows(EmployeeNotFoundException.class,
-                () -> employeeService.getEmployeeByNameAndSurname("Ivan", "Ivanov"));
+        when(employeeRepository.findAllWithPassportAndPhones()).thenReturn(List.of(EmployeeTestDataUtils.createEmployeeEntity()));
 
-        assertEquals("Employee with name Ivan and surname Ivanov doesn't exist", employeeNotFoundException.getMessage());
+        List<EmployeeResponseDto> allEmployees = employeeService.getAllEmployees();
 
+        assertEquals(1, allEmployees.size());
     }
+
 }

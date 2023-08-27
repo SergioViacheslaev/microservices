@@ -1,7 +1,7 @@
 package com.study.microservices.employeeservice.repo;
 
 import com.study.microservices.employeeservice.model.entity.EmployeeEntity;
-import com.study.microservices.employeeservice.repo.projection.EmployeeView;
+import com.study.microservices.employeeservice.model.projection.EmployeeView;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;

@@ -44,15 +44,26 @@ public class EmployeeController {
         return new ResponseEntity<>(employeeService.updateEmployee(passportNumber, employeeUpdateRequestDto), HttpStatus.OK);
     }
 
-    @Operation(summary = "Delete existing Employee", description = "Deletes existing Employee by passport number")
+    @Operation(summary = "Delete Employee by passport number", description = "Deletes Employee by passport number")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping(path = "/{passport_number}")
-    public void deleteEmployee(
-            @Parameter(required = true)
+    public void deleteEmployeeByPassportNumber(
+            @Parameter(description = "employee's passport number", schema = @Schema(defaultValue = "1234567891"))
             @PathVariable("passport_number")
             String passportNumber) {
-        log.info("Received deleteEmployee request");
-        employeeService.deleteEmployee(passportNumber);
+        log.info("Received deleteEmployeeByPassportNumber {} request", passportNumber);
+        employeeService.deleteEmployeeByPassportNumber(passportNumber);
+    }
+
+    @Operation(summary = "Delete Employee by id", description = "Deletes Employee by id")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping(path = "/id/{employee_id}")
+    public void deleteEmployeeById(
+            @Parameter(description = "employee's id", schema = @Schema(defaultValue = "b16355a9-3edf-418d-bafc-52e46f6703e1"))
+            @PathVariable("employee_id")
+            String employeeId) {
+        log.info("Received deleteEmployeeById {} request", employeeId);
+        employeeService.deleteEmployeeById(employeeId);
     }
 
     @Operation(summary = "Find all Employees", description = "Finds all Employees")
