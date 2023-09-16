@@ -22,6 +22,7 @@ import com.study.microservices.employeeservice.repo.EmployeePhoneRepository;
 import com.study.microservices.employeeservice.repo.EmployeeRepository;
 import com.study.microservices.employeeservice.utils.DtoUtils;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.context.ApplicationEventPublisher;
@@ -137,10 +138,13 @@ public class EmployeeService {
 
     @Transactional
     public void deleteEmployeeById(String employeeId) {
-        //getReference returns initialized entity in transaction, not proxy
-        val employeeEntityToDelete = entityManager.getReference(EmployeeEntity.class, UUID.fromString(employeeId));
-
-        entityManager.remove(employeeEntityToDelete);
+        try {
+            //getReference returns initialized entity in transaction, not proxy
+            val employeeEntityToDelete = entityManager.getReference(EmployeeEntity.class, UUID.fromString(employeeId));
+            entityManager.remove(employeeEntityToDelete);
+        } catch (EntityNotFoundException ex) {
+            throw new EmployeeNotFoundException(String.format("Employee with id %s not found", employeeId));
+        }
 
         eventPublisher.publishEvent(new EmployeeEvent(EmployeeEventType.DELETE.getName(),
                 String.format("сотрудник с id %s", employeeId)));

@@ -23,7 +23,6 @@ public class RestExceptionHandler {
 
     @ExceptionHandler(EmployeeNotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleEmployeeNotFoundException(EmployeeNotFoundException ex) {
-        log.warn("getEmployeeByName throws EmployeeNotFoundException: {}", ex.getMessage());
         return buildResponseEntity(new ApiErrorResponse(ex.getMessage()), NOT_FOUND);
     }
 
