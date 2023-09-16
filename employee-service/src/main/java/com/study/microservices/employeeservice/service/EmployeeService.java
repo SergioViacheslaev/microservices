@@ -1,5 +1,6 @@
 package com.study.microservices.employeeservice.service;
 
+import com.study.microservices.employeeservice.exception.EmployeeDepartmentNotFoundException;
 import com.study.microservices.employeeservice.exception.EmployeeFoundException;
 import com.study.microservices.employeeservice.exception.EmployeeNotFoundException;
 import com.study.microservices.employeeservice.exception.EmployeePhoneFoundException;
@@ -31,10 +32,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static com.study.microservices.employeeservice.utils.DtoUtils.getEmployeeResponseDtoFromEntity;
 
@@ -148,6 +146,19 @@ public class EmployeeService {
                 String.format("сотрудник с id %s", employeeId)));
     }
 
+    @Transactional
+    public void removeDepartmentFromEmployee(String employeeId, String departmentName) {
+        val storedEmployeeEntity = employeeRepository.findById(UUID.fromString(employeeId))
+                .orElseThrow(() -> new EmployeeNotFoundException(String.format("Employee with id %s not found", employeeId)));
+        val employeeDepartments = storedEmployeeEntity.getDepartments();
+        val departmentEntityToRemove = getDepartmentToRemove(employeeId, departmentName, employeeDepartments);
+
+        employeeDepartments.remove(departmentEntityToRemove);
+
+        eventPublisher.publishEvent(new EmployeeEvent(EmployeeEventType.UPDATE.getName(),
+                String.format("сотрудник с id %s, исключен из департамента %s", employeeId, departmentName)));
+    }
+
     @Transactional(readOnly = true)
     public List<EmployeeResponseDto> getAllEmployees() {
         val employeeEntities = employeeRepository.findAllWithPassportAndPhones();
@@ -223,5 +234,19 @@ public class EmployeeService {
                 throw new EmployeePhoneFoundException(String.format("This phone number %s is already exists", phoneDto.phoneNumber()));
             }
         });
+    }
+
+    private EmployeeDepartmentEntity getDepartmentToRemove(String employeeId, String departmentName, Set<EmployeeDepartmentEntity> employeeDepartments) {
+        EmployeeDepartmentEntity departmentEntityToRemove = null;
+        for (EmployeeDepartmentEntity employeeDepartment : employeeDepartments) {
+            if (employeeDepartment.getDepartmentName().equals(departmentName)) {
+                departmentEntityToRemove = employeeDepartment;
+            }
+        }
+        if (departmentEntityToRemove == null) {
+            throw new EmployeeDepartmentNotFoundException(String.format("Department with name %s not found for employeeId %s",
+                    departmentName, employeeId));
+        }
+        return departmentEntityToRemove;
     }
 }

@@ -44,6 +44,18 @@ public class EmployeeController {
         return new ResponseEntity<>(employeeService.updateEmployee(passportNumber, employeeUpdateRequestDto), HttpStatus.OK);
     }
 
+    @Operation(summary = "Remove department from Employee", description = "Removes department from Employee")
+    @ResponseStatus(HttpStatus.OK)
+    @PatchMapping(path = "/id/{employee_id}/departments/{department_name}")
+    public void removeDepartmentFromEmployee(
+            @Parameter(description = "employee's id", schema = @Schema(defaultValue = "b16355a9-3edf-418d-bafc-52e46f6703e1"))
+            @PathVariable("employee_id") String employeeId,
+            @Parameter(description = "employee's department to remove", schema = @Schema(defaultValue = "Управление автоматизации"))
+            @PathVariable("department_name") String departmentName) {
+        log.info("Received remove Department {} from Employee {} request", departmentName, employeeId);
+        employeeService.removeDepartmentFromEmployee(employeeId, departmentName);
+    }
+
     @Operation(summary = "Delete Employee by passport number", description = "Deletes Employee by passport number")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping(path = "/{passport_number}")

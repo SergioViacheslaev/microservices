@@ -27,6 +27,12 @@ public class RestExceptionHandler {
         return buildResponseEntity(new ApiErrorResponse(ex.getMessage()), NOT_FOUND);
     }
 
+    @ExceptionHandler(EmployeeDepartmentNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleEmployeeDepartmentNotFoundException(EmployeeDepartmentNotFoundException ex) {
+        log.warn("getDepartmentToRemove throws EmployeeNotFoundException: {}", ex.getMessage());
+        return buildResponseEntity(new ApiErrorResponse(ex.getMessage()), NOT_FOUND);
+    }
+
     @ExceptionHandler(EmployeeFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleEmployeeFoundException(EmployeeFoundException ex) {
         log.warn("createEmployee throws EmployeeFoundException: {}", ex.getMessage());

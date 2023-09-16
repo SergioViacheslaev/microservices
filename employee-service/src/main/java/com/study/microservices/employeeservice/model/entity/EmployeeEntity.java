@@ -48,6 +48,7 @@ import static java.util.Objects.isNull;
 public class EmployeeEntity extends AuditedEntity {
 
     @Id
+    //org.hibernate.id.UUIDGenerator generates id internally
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "employee_id")
     private UUID id;
