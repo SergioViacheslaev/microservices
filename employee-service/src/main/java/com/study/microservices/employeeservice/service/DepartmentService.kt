@@ -17,6 +17,12 @@ class DepartmentService(
         return employeeDepartmentRepository.findAll().map { DepartmentResponseDto(it.departmentName) }
     }
 
+    @Transactional(readOnly = true)
+    fun getAllDepartmentsFilteredByNames(departmentNames: List<String>): List<DepartmentResponseDto> {
+        return employeeDepartmentRepository.findAllByDepartmentNameIn(departmentNames)
+            .map { DepartmentResponseDto(it.departmentName) }
+    }
+
     @Transactional
     fun deleteDepartmentByName(departmentName: String) {
         return employeeDepartmentRepository.deleteDepartmentByName(departmentName)
