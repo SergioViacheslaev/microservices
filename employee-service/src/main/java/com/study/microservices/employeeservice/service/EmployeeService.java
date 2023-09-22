@@ -33,9 +33,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 import static com.study.microservices.employeeservice.utils.DtoUtils.getEmployeeResponseDtoFromEntity;
+import static com.study.microservices.employeeservice.utils.SpecificationUtils.hasName;
+import static com.study.microservices.employeeservice.utils.SpecificationUtils.hasSurname;
+import static org.springframework.data.jpa.domain.Specification.where;
 
 @Slf4j
 @Service
@@ -184,7 +191,7 @@ public class EmployeeService {
 
     @Transactional(readOnly = true)
     public EmployeeResponseDto getEmployeeByNameAndSurname(String employeeName, String employeeSurname) {
-        return employeeRepository.findByNameAndSurname(employeeName, employeeSurname)
+        return employeeRepository.findOne(where(hasName(employeeName)).and(where(hasSurname(employeeSurname))))
                 .map(DtoUtils::getEmployeeResponseDtoFromEntity)
                 .orElseThrow(() -> new EmployeeNotFoundException(String.format("Employee with name %s and surname %s doesn't exist", employeeName, employeeSurname)));
     }

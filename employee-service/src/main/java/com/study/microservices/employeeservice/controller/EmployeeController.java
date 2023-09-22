@@ -102,10 +102,10 @@ public class EmployeeController {
         return new ResponseEntity<>(employeeService.findEmployeeById(employeeId), HttpStatus.OK);
     }
 
-    @Operation(summary = "Find Employee by filter", description = "Find Employee by name and surname")
-    @GetMapping(path = "/filter")
-    public ResponseEntity<EmployeeResponseDto> findEmployeeByNameAndSurname(@RequestParam String employeeName,
-                                                                            @RequestParam String employeeSurname) {
+    @Operation(summary = "Find Employee by name and surname", description = "Find Employee by name and surname")
+    @GetMapping(path = "/name/{name}/surname/{surname}")
+    public ResponseEntity<EmployeeResponseDto> findEmployeeByNameAndSurname(@PathVariable("name") String employeeName,
+                                                                            @PathVariable("surname") String employeeSurname) {
         return new ResponseEntity<>(employeeService.getEmployeeByNameAndSurname(employeeName, employeeSurname), HttpStatus.OK);
     }
 
