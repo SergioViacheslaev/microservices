@@ -26,14 +26,5 @@ spring:
       ddl-auto: none
     properties:
       hibernate:
-        format_sql: true
-        show_sql: true
-        use_sql_comments: true
   flyway:
     enabled: true
-
-logging:
-  level:
-    org.springframework.orm.jpa: DEBUG
-    org.hibernate.orm.jdbc.bind: TRACE
-    org.springframework.transaction: DEBUG
