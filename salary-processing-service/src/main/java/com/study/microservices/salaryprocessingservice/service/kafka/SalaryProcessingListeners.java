@@ -40,4 +40,6 @@ public class SalaryProcessingListeners {
         log.info("Committed offset {}", consumerRecord.offset());
     }
 
+
+
 }

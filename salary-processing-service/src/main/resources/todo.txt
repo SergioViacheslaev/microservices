@@ -1,3 +1,0 @@
-1. liquibase
-2. Mongo ?
-3. TestContainers Kafka

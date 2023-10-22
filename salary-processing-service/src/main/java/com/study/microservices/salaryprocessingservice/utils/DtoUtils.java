@@ -20,7 +20,7 @@ public class DtoUtils {
     public static List<EmployeePaymentDto> getEmployeePayments(List<EmployeeResponseDto> employees) {
         return employees.stream()
                 .map(employee -> EmployeePaymentDto.builder()
-                        .paymentId(employee.Id().toString())
+                        .paymentId(employee.id().toString())
                         .name(employee.name())
                         .sureName(employee.surname())
                         .passportNumber(employee.passport().passportNumber())
@@ -30,7 +30,7 @@ public class DtoUtils {
 
     public static EmployeeResponseDto createRandomDummyEmployeeResponseDto() {
         return EmployeeResponseDto.builder()
-                .Id(UUID.randomUUID())
+                .id(UUID.randomUUID())
                 .name(faker.name().firstName())
                 .surname(faker.name().lastName())
                 .birthDate(LocalDate.of(1987, 1, 15))

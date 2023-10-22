@@ -27,6 +27,7 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       properties:
+        ack: all
 #        enable:
 #          idempotence: true is default since ver 3.0
         spring.json.add.type.headers: false
