@@ -19,12 +19,12 @@ idea {
     }
 }
 
-hibernate {
-    enhancement {
-        lazyInitialization = true
-        dirtyTracking = true
-    }
-}
+//hibernate {
+//    enhancement {
+//        lazyInitialization = true
+//        dirtyTracking = true
+//    }
+//}
 
 flyway {
     url = 'jdbc:h2:mem:employees_db;MODE=PostgreSQL'
