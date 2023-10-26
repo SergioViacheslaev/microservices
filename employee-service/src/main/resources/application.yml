@@ -28,3 +28,7 @@ spring:
       hibernate:
   flyway:
     enabled: true
+
+springdoc:
+  swagger-ui:
+    operations-sorter: method

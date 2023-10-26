@@ -23,24 +23,25 @@ public class RestExceptionHandler {
 
     @ExceptionHandler(EmployeeNotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleEmployeeNotFoundException(EmployeeNotFoundException ex) {
+        log.warn(ex.getMessage());
         return buildResponseEntity(new ApiErrorResponse(ex.getMessage()), NOT_FOUND);
     }
 
     @ExceptionHandler(EmployeeDepartmentNotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleEmployeeDepartmentNotFoundException(EmployeeDepartmentNotFoundException ex) {
-        log.warn("getDepartmentToRemove throws EmployeeNotFoundException: {}", ex.getMessage());
+        log.warn(ex.getMessage(), ex);
         return buildResponseEntity(new ApiErrorResponse(ex.getMessage()), NOT_FOUND);
     }
 
     @ExceptionHandler(EmployeeFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleEmployeeFoundException(EmployeeFoundException ex) {
-        log.warn("createEmployee throws EmployeeFoundException: {}", ex.getMessage());
+        log.warn(ex.getMessage(), ex);
         return buildResponseEntity(new ApiErrorResponse(ex.getMessage()), BAD_REQUEST);
     }
 
     @ExceptionHandler(EmployeePhoneFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleEmployeePhoneFoundException(EmployeePhoneFoundException ex) {
-        log.warn("createEmployee throws EmployeePhoneFoundException: {}", ex.getMessage());
+        log.warn(ex.getMessage(), ex);
         return buildResponseEntity(new ApiErrorResponse(ex.getMessage()), BAD_REQUEST);
     }
 

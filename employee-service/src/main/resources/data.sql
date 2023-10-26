@@ -37,10 +37,18 @@ VALUES ('b16355a9-3edf-418d-bafc-52e46f6703e1',
 
 INSERT INTO phones (employee_id, phone_number, phone_type)
 VALUES ('b16355a9-3edf-418d-bafc-52e46f6703e1', '792112345671', 'WORK'),
-       ('b16355a9-3edf-418d-bafc-52e46f6703e1', '796598387472', 'HOME');
+       ('b16355a9-3edf-418d-bafc-52e46f6703e1', '796598387472', 'HOME'),
+       ('b16355a9-3edf-418d-bafc-52e46f6703e2', '796598387432', 'HOME'),
+       ('b16355a9-3edf-418d-bafc-52e46f6703e3', '796598387433', 'HOME'),
+       ('b16355a9-3edf-418d-bafc-52e46f6703e4', '796598387434', 'HOME'),
+       ('b16355a9-3edf-418d-bafc-52e46f6703e5', '796598387435', 'HOME');
 
 INSERT INTO passports (employee_id, passport_number, registration_address)
-VALUES ('b16355a9-3edf-418d-bafc-52e46f6703e1', 1234567891, 'Улица Пушкина, дом Колотушкина');
+VALUES ('b16355a9-3edf-418d-bafc-52e46f6703e1', 1234567891, 'Улица Пушкина, дом Колотушкина 1'),
+       ('b16355a9-3edf-418d-bafc-52e46f6703e2', 1234567892, 'Улица Пушкина, дом Колотушкина 2'),
+       ('b16355a9-3edf-418d-bafc-52e46f6703e3', 1234567893, 'Улица Пушкина, дом Колотушкина 3'),
+       ('b16355a9-3edf-418d-bafc-52e46f6703e4', 1234567894, 'Улица Пушкина, дом Колотушкина 4'),
+       ('b16355a9-3edf-418d-bafc-52e46f6703e5', 1234567895, 'Улица Пушкина, дом Колотушкина 5');
 
 INSERT INTO employees_departments (employee_id, department_id)
 VALUES ('b16355a9-3edf-418d-bafc-52e46f6703e1', 100),

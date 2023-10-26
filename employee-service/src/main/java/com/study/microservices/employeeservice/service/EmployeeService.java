@@ -10,7 +10,6 @@ import com.study.microservices.employeeservice.model.dto.EmployeePassport;
 import com.study.microservices.employeeservice.model.dto.EmployeeResponseDto;
 import com.study.microservices.employeeservice.model.dto.EmployeeUpdateRequestDto;
 import com.study.microservices.employeeservice.model.dto.PhoneType;
-import com.study.microservices.employeeservice.model.entity.EmployeeDepartmentEntity;
 import com.study.microservices.employeeservice.model.entity.EmployeeEntity;
 import com.study.microservices.employeeservice.model.entity.EmployeePassportEntity;
 import com.study.microservices.employeeservice.model.entity.EmployeePhoneEntity;
@@ -33,10 +32,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 import static com.study.microservices.employeeservice.utils.DtoUtils.getEmployeeResponseDtoFromEntity;
@@ -73,7 +69,7 @@ public class EmployeeService {
     public EmployeeResponseDto createEmployee(EmployeeCreateRequestDto employeeCreateRequestDto) {
         validateEmployeeCreateRequestDto(employeeCreateRequestDto);
 
-        final EmployeeEntity employeeToSave = EmployeeEntity.builder()
+        val employeeToCreate = EmployeeEntity.builder()
                 .name(employeeCreateRequestDto.name())
                 .surname(employeeCreateRequestDto.surname())
                 .birthDate(employeeCreateRequestDto.birthDate())
@@ -81,35 +77,31 @@ public class EmployeeService {
                 .payrollAccount(employeeCreateRequestDto.payrollAccount())
                 .build();
 
-        final EmployeePassportEntity employeePassportEntity = EmployeePassportEntity.builder()
+        val employeePassportEntity = EmployeePassportEntity.builder()
                 .passportNumber(Long.valueOf(employeeCreateRequestDto.passport().passportNumber()))
                 .registrationAddress(employeeCreateRequestDto.passport().registrationAddress())
                 .build();
 
-        final List<EmployeePhoneEntity> employeePhonesToSave = employeeCreateRequestDto.phones().stream()
+        val employeePhoneEntities = employeeCreateRequestDto.phones().stream()
                 .map(employeePhone -> EmployeePhoneEntity.builder()
                         .phoneNumber(employeePhone.phoneNumber())
                         .phoneType(PhoneType.getPhoneTypeFromString(employeePhone.phoneType()))
                         .build())
                 .toList();
 
-        //Set existing department or save new and set it
-        val employeeDepartmentsToSave = new ArrayList<EmployeeDepartmentEntity>();
+        employeeToCreate.addPassport(employeePassportEntity);
+        employeeToCreate.addPhones(employeePhoneEntities);
+
+        //fail creating new employee with non existing department
         employeeCreateRequestDto.departments().forEach(dtoDepartment -> {
-            Optional<EmployeeDepartmentEntity> departmentEntity = employeeDepartmentRepository.findByDepartmentName(dtoDepartment.departmentName());
-            departmentEntity.ifPresent(employeeDepartmentsToSave::add);
-            if (departmentEntity.isEmpty()) {
-                employeeDepartmentsToSave.add(EmployeeDepartmentEntity.builder()
-                        .departmentName(dtoDepartment.departmentName())
-                        .build());
-            }
+            val departmentEntity = employeeDepartmentRepository.findByDepartmentName(dtoDepartment.departmentName())
+                    .orElseThrow(() -> new EmployeeDepartmentNotFoundException(
+                            String.format("Department with name %s does not exist", dtoDepartment.departmentName())));
+
+            employeeToCreate.addDepartment(departmentEntity);
         });
 
-        employeeToSave.addPassport(employeePassportEntity);
-        employeeToSave.addPhones(employeePhonesToSave);
-        employeeDepartmentsToSave.forEach(employeeToSave::addDepartment);
-
-        val savedEmployeeEntity = employeeRepository.save(employeeToSave);
+        val savedEmployeeEntity = employeeRepository.save(employeeToCreate);
         val employeeResponseDto = employeeMapper.toEmployeeResponseDto(savedEmployeeEntity);
 
         eventPublisher.publishEvent(new EmployeeEvent(EmployeeEventType.CREATE.getName(), employeeResponseDto.toString()));
@@ -159,12 +151,16 @@ public class EmployeeService {
 
     @Transactional
     public void removeDepartmentFromEmployee(String employeeId, String departmentName) {
-        val storedEmployeeEntity = employeeRepository.findById(UUID.fromString(employeeId))
+        val storedEmployee = employeeRepository.findById(UUID.fromString(employeeId))
                 .orElseThrow(() -> new EmployeeNotFoundException(String.format("Employee with id %s not found", employeeId)));
-        val employeeDepartments = storedEmployeeEntity.getDepartments();
-        val departmentEntityToRemove = getDepartmentToRemove(employeeId, departmentName, employeeDepartments);
+        val storedEmployeeDepartments = storedEmployee.getDepartments();
+        val departmentEntityToRemove = storedEmployeeDepartments.stream()
+                .filter(employeeDepartment -> departmentName.equals(employeeDepartment.getDepartmentName()))
+                .findFirst()
+                .orElseThrow(() -> new EmployeeDepartmentNotFoundException(String.format("Department with name %s is not set for employeeId %s",
+                        departmentName, employeeId)));
 
-        employeeDepartments.remove(departmentEntityToRemove);
+        storedEmployeeDepartments.remove(departmentEntityToRemove);
 
         eventPublisher.publishEvent(new EmployeeEvent(EmployeeEventType.UPDATE.getName(),
                 String.format("сотрудник с id %s, исключен из департамента %s", employeeId, departmentName)));
@@ -247,17 +243,4 @@ public class EmployeeService {
         });
     }
 
-    private EmployeeDepartmentEntity getDepartmentToRemove(String employeeId, String departmentName, Set<EmployeeDepartmentEntity> employeeDepartments) {
-        EmployeeDepartmentEntity departmentEntityToRemove = null;
-        for (EmployeeDepartmentEntity employeeDepartment : employeeDepartments) {
-            if (employeeDepartment.getDepartmentName().equals(departmentName)) {
-                departmentEntityToRemove = employeeDepartment;
-            }
-        }
-        if (departmentEntityToRemove == null) {
-            throw new EmployeeDepartmentNotFoundException(String.format("Department with name %s not found for employeeId %s",
-                    departmentName, employeeId));
-        }
-        return departmentEntityToRemove;
-    }
 }
