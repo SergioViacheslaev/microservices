@@ -1,7 +1,7 @@
 package com.study.microservices.employeeservice.model.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.study.microservices.employeeservice.utils.jackson.EmployeeBirthDateDeserializer;
+import com.study.microservices.employeeservice.util.jackson.EmployeeBirthDateDeserializer;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 

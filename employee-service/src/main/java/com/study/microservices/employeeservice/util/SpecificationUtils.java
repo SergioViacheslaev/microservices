@@ -1,4 +1,4 @@
-package com.study.microservices.employeeservice.utils;
+package com.study.microservices.employeeservice.util;
 
 import com.study.microservices.employeeservice.model.entity.EmployeeEntity;
 import lombok.experimental.UtilityClass;

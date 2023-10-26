@@ -1,4 +1,4 @@
-package com.study.microservices.employeeservice.utils;
+package com.study.microservices.employeeservice.util;
 
 import com.study.microservices.employeeservice.model.dto.EmployeeDepartment;
 import com.study.microservices.employeeservice.model.dto.EmployeePassport;

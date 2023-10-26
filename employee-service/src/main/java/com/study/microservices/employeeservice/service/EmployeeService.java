@@ -19,7 +19,7 @@ import com.study.microservices.employeeservice.model.mapper.EmployeeMapper;
 import com.study.microservices.employeeservice.repo.EmployeeDepartmentRepository;
 import com.study.microservices.employeeservice.repo.EmployeePhoneRepository;
 import com.study.microservices.employeeservice.repo.EmployeeRepository;
-import com.study.microservices.employeeservice.utils.DtoUtils;
+import com.study.microservices.employeeservice.util.DtoUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -35,9 +35,9 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
-import static com.study.microservices.employeeservice.utils.DtoUtils.getEmployeeResponseDtoFromEntity;
-import static com.study.microservices.employeeservice.utils.SpecificationUtils.hasName;
-import static com.study.microservices.employeeservice.utils.SpecificationUtils.hasSurname;
+import static com.study.microservices.employeeservice.util.DtoUtils.getEmployeeResponseDtoFromEntity;
+import static com.study.microservices.employeeservice.util.SpecificationUtils.hasName;
+import static com.study.microservices.employeeservice.util.SpecificationUtils.hasSurname;
 import static org.springframework.data.jpa.domain.Specification.where;
 
 @Slf4j

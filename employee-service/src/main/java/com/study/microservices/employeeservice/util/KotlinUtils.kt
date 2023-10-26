@@ -1,4 +1,4 @@
-package com.study.microservices.employeeservice.utils
+package com.study.microservices.employeeservice.util
 
 import org.slf4j.LoggerFactory
 

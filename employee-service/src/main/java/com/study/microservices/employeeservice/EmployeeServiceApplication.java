@@ -1,6 +1,6 @@
 package com.study.microservices.employeeservice;
 
-import com.study.microservices.employeeservice.utils.KotlinUtilsKt;
+import com.study.microservices.employeeservice.util.KotlinUtilsKt;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

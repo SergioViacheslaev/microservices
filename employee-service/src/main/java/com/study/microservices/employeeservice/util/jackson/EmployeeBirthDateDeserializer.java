@@ -1,4 +1,4 @@
-package com.study.microservices.employeeservice.utils.jackson;
+package com.study.microservices.employeeservice.util.jackson;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
