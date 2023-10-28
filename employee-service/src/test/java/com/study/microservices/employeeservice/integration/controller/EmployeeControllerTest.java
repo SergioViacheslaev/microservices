@@ -11,7 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static com.study.microservices.employeeservice.objects_utils.EmployeeTestDataUtils.createEmployeeRequestDto;
+import static com.study.microservices.employeeservice.objects_utils.EmployeeObjectUtils.createEmployeeRequestDto;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;

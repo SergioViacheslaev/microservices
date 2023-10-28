@@ -10,14 +10,19 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class EmployeeServiceApplication implements CommandLineRunner {
 
-    @Override
-    public void run(String... args) {
-        log.info("Hello from Java {}", System.getProperty("java.version"));
-        KotlinUtilsKt.printKotlinCurrentVersion();
-    }
-
     public static void main(String[] args) {
         SpringApplication.run(EmployeeServiceApplication.class, args);
+    }
+
+    @Override
+    public void run(String... args) {
+        printDependenciesVersions();
+    }
+
+    private void printDependenciesVersions() {
+        log.info("Java {}", System.getProperty("java.version"));
+        KotlinUtilsKt.printKotlinCurrentVersion();
+        log.info("Hibernate {}", org.hibernate.Version.getVersionString());
     }
 
 }

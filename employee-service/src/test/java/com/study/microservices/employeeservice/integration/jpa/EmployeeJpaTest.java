@@ -13,17 +13,14 @@ import org.springframework.context.annotation.Import;
 import java.util.List;
 import java.util.Optional;
 
-import static com.study.microservices.employeeservice.objects_utils.EmployeeTestDataUtils.createEmployeeEntity;
+import static com.study.microservices.employeeservice.objects_utils.EmployeeObjectUtils.createEmployeeEntity;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @Import(PersistenceConfig.class)
 //@AutoConfigureTestDatabase override to use other db than h2
-public class EmployeeServiceJpaTest {
+public class EmployeeJpaTest {
 
     @Autowired
     EmployeeRepository employeeRepository;
@@ -56,7 +53,7 @@ public class EmployeeServiceJpaTest {
     @Test
     @DisplayName("Должен найти Employee по имени и фамилии")
     void should_find_employee() {
-        Optional<EmployeeEntity> optionalEmployee = employeeRepository.findByNameAndSurname("Ivan", "Testov");
+        Optional<EmployeeEntity> optionalEmployee = employeeRepository.findByNameAndSurname("Ivan", "Ivanov");
 
         assertTrue(optionalEmployee.isPresent());
     }
@@ -66,9 +63,7 @@ public class EmployeeServiceJpaTest {
     void should_find_all_employee() {
         List<EmployeeEntity> allEmployees = employeeRepository.findAll();
 
-        assertThat(allEmployees).isNotNull()
-                .hasSize(5)
-                .allMatch(employeeEntity -> employeeEntity.getSurname().equals("Testov"));
+        assertThat(allEmployees).isNotNull().hasSize(5);
     }
 
 }

@@ -6,7 +6,7 @@ import com.study.microservices.employeeservice.integration.config.SpringContextU
 import com.study.microservices.employeeservice.model.dto.EmployeeResponseDto;
 import com.study.microservices.employeeservice.model.entity.EmployeeEntity;
 import com.study.microservices.employeeservice.model.mapper.EmployeeMapperImpl;
-import com.study.microservices.employeeservice.objects_utils.EmployeeTestDataUtils;
+import com.study.microservices.employeeservice.objects_utils.EmployeeObjectUtils;
 import com.study.microservices.employeeservice.repo.EmployeeDepartmentRepository;
 import com.study.microservices.employeeservice.repo.EmployeePhoneRepository;
 import com.study.microservices.employeeservice.repo.EmployeeRepository;
@@ -60,7 +60,7 @@ class EmployeeServiceTest {
     void getAllEmployees() {
         springContextUtils.printAllBeanDefinitions();
 
-        when(employeeRepository.findAllWithPassportAndPhones()).thenReturn(List.of(EmployeeTestDataUtils.createEmployeeEntity()));
+        when(employeeRepository.findAllWithPassportAndPhones()).thenReturn(List.of(EmployeeObjectUtils.createEmployeeEntity()));
 
         List<EmployeeResponseDto> allEmployees = employeeService.getAllEmployees();
 
@@ -70,7 +70,7 @@ class EmployeeServiceTest {
     @Test
     @DisplayName("Должен исключить сотрудника из департамента")
     void shouldDeleteDepartmentFromEmployee() {
-        EmployeeEntity storedEmployeeEntity = EmployeeTestDataUtils.createEmployeeEntity();
+        EmployeeEntity storedEmployeeEntity = EmployeeObjectUtils.createEmployeeEntity();
         storedEmployeeEntity.setId(UUID.randomUUID());
         UUID employeeId = storedEmployeeEntity.getId();
 
@@ -84,7 +84,7 @@ class EmployeeServiceTest {
     @Test
     @DisplayName("Должен выбросить исключение если такого департамента нет")
     void should_throwException_when_deleteDepartmentFromEmployee() {
-        EmployeeEntity storedEmployeeEntity = EmployeeTestDataUtils.createEmployeeEntity();
+        EmployeeEntity storedEmployeeEntity = EmployeeObjectUtils.createEmployeeEntity();
         storedEmployeeEntity.setId(UUID.randomUUID());
         UUID employeeId = storedEmployeeEntity.getId();
 

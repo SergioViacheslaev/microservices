@@ -16,9 +16,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.study.microservices.employeeservice.objects_utils.EmployeeTestDataUtils.createEmployeeEntity;
-import static com.study.microservices.employeeservice.objects_utils.EmployeeTestDataUtils.createEmployeeRequestDto;
-import static com.study.microservices.employeeservice.objects_utils.EmployeeTestDataUtils.createEmployeeResponseDto;
+import static com.study.microservices.employeeservice.objects_utils.EmployeeObjectUtils.createEmployeeEntity;
+import static com.study.microservices.employeeservice.objects_utils.EmployeeObjectUtils.createEmployeeRequestDto;
+import static com.study.microservices.employeeservice.objects_utils.EmployeeObjectUtils.createEmployeeResponseDto;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;

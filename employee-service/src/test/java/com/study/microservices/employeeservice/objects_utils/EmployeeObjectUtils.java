@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @UtilityClass
-public class EmployeeTestDataUtils {
+public class EmployeeObjectUtils {
 
     public static EmployeeEntity createEmployeeEntity() {
         EmployeeEntity employeeEntity = EmployeeEntity.builder()

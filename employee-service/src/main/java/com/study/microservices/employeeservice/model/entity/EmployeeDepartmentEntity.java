@@ -19,6 +19,7 @@ import org.hibernate.proxy.HibernateProxy;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -31,9 +32,9 @@ import java.util.Set;
 public class EmployeeDepartmentEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "department_id")
-    private Long id;
+    private UUID id;
 
     @Column(name = "department_name")
     private String departmentName;

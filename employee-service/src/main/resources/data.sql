@@ -1,6 +1,6 @@
 INSERT INTO departments (department_id, department_name)
-VALUES (100, 'Управление автоматизации'),
-       (101, 'Департамент разработки ПО');
+VALUES ('0ff29382-4537-42b8-bdac-81a229ba0bd1', 'Управление автоматизации'),
+       ('0ff29382-4537-42b8-bdac-81a229ba0bd2', 'Департамент разработки ПО');
 
 INSERT INTO employees (employee_id, employee_name, employee_surname, employee_birth_date, monthly_salary,
                        payroll_account)
@@ -51,7 +51,7 @@ VALUES ('b16355a9-3edf-418d-bafc-52e46f6703e1', 1234567891, 'Улица Пушк
        ('b16355a9-3edf-418d-bafc-52e46f6703e5', 1234567895, 'Улица Пушкина, дом Колотушкина 5');
 
 INSERT INTO employees_departments (employee_id, department_id)
-VALUES ('b16355a9-3edf-418d-bafc-52e46f6703e1', 100),
-       ('b16355a9-3edf-418d-bafc-52e46f6703e1', 101),
-       ('b16355a9-3edf-418d-bafc-52e46f6703e2', 100),
-       ('b16355a9-3edf-418d-bafc-52e46f6703e2', 101);
+VALUES ('b16355a9-3edf-418d-bafc-52e46f6703e1', '0ff29382-4537-42b8-bdac-81a229ba0bd1'),
+       ('b16355a9-3edf-418d-bafc-52e46f6703e1', '0ff29382-4537-42b8-bdac-81a229ba0bd2'),
+       ('b16355a9-3edf-418d-bafc-52e46f6703e2', '0ff29382-4537-42b8-bdac-81a229ba0bd1'),
+       ('b16355a9-3edf-418d-bafc-52e46f6703e2', '0ff29382-4537-42b8-bdac-81a229ba0bd2');
