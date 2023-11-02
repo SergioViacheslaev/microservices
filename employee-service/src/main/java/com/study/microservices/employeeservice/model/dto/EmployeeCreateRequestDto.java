@@ -14,10 +14,9 @@ import java.time.LocalDate;
 import java.util.List;
 
 
-@Builder
 @Schema
+@Builder
 public record EmployeeCreateRequestDto(
-
         @NotBlank(message = "Имя сотрудника должно быть заполнено")
         String name,
 

@@ -69,6 +69,8 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
     implementation "org.slf4j:slf4j-ext:$slf4jExtVersion"
+    implementation "com.github.javafaker:javafaker:$javafaker"
+    implementation "org.springframework.retry:spring-retry:$springRetry"
 }
 
 tasks.named('test') {

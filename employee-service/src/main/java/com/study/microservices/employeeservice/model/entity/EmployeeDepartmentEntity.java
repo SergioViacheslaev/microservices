@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -43,6 +44,9 @@ public class EmployeeDepartmentEntity {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Set<EmployeeEntity> employees;
+
+    @Version
+    private Integer version;
 
     public Set<EmployeeEntity> getEmployees() {
         return Objects.isNull(employees) ? new HashSet<>() : employees;

@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @Import(PersistenceConfig.class)
-//@AutoConfigureTestDatabase override to use other db than h2
+//@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE) override to use other db than h2
 public class EmployeeJpaTest {
 
     @Autowired

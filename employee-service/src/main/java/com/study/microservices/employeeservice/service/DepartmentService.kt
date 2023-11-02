@@ -1,10 +1,16 @@
 package com.study.microservices.employeeservice.service
 
+import com.study.microservices.employeeservice.exception.EmployeeDepartmentNotFoundException
 import com.study.microservices.employeeservice.model.dto.DepartmentResponseDto
+import com.study.microservices.employeeservice.model.dto.DepartmentUpdateRequestDto
 import com.study.microservices.employeeservice.repo.EmployeeDepartmentRepository
 import lombok.RequiredArgsConstructor
+import org.springframework.orm.ObjectOptimisticLockingFailureException
+import org.springframework.retry.annotation.Backoff
+import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.util.*
 
 @Service
 @RequiredArgsConstructor
@@ -27,4 +33,18 @@ class DepartmentService(
     fun deleteDepartmentByName(departmentName: String) {
         return employeeDepartmentRepository.deleteDepartmentByName(departmentName)
     }
+
+    /**
+     * Example of transaction retry for ObjectOptimisticLockingFailureException
+     */
+    @Transactional
+    @Retryable(retryFor = [ObjectOptimisticLockingFailureException::class], maxAttempts = 3, backoff = Backoff(delay = 100))
+    fun updateDepartmentById(departmentId: String, departmentUpdateRequestDto: DepartmentUpdateRequestDto): DepartmentResponseDto {
+        val storedDepartment = employeeDepartmentRepository.findById(UUID.fromString(departmentId))
+            .orElseThrow { EmployeeDepartmentNotFoundException("Department with id $departmentId not found") }
+
+        storedDepartment.departmentName = departmentUpdateRequestDto.departmentName
+        return DepartmentResponseDto(storedDepartment.departmentName)
+    }
+
 }

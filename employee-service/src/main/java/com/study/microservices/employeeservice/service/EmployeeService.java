@@ -92,7 +92,7 @@ public class EmployeeService {
         employeeToCreate.addPassport(employeePassportEntity);
         employeeToCreate.addPhones(employeePhoneEntities);
 
-        //fail creating new employee with non existing department
+        //fail creating new employee with non-existing department
         employeeCreateRequestDto.departments().forEach(dtoDepartment -> {
             val departmentEntity = employeeDepartmentRepository.findByDepartmentName(dtoDepartment.departmentName())
                     .orElseThrow(() -> new EmployeeDepartmentNotFoundException(

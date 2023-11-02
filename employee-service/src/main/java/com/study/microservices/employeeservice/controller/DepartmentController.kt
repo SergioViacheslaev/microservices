@@ -1,18 +1,15 @@
 package com.study.microservices.employeeservice.controller
 
+import com.study.microservices.employeeservice.model.dto.DepartmentCreateRequestDto
 import com.study.microservices.employeeservice.model.dto.DepartmentResponseDto
+import com.study.microservices.employeeservice.model.dto.DepartmentUpdateRequestDto
 import com.study.microservices.employeeservice.service.DepartmentService
+import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Schema
 import org.slf4j.LoggerFactory
-import org.springframework.http.HttpStatus.NO_CONTENT
-import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.ResponseStatus
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.http.HttpStatus.*
+import org.springframework.web.bind.annotation.*
 
 
 @RestController
@@ -38,7 +35,26 @@ class DepartmentController(
     @GetMapping("/names/{departmentNames}")
     fun getAllDepartmentsFilterByNames(@PathVariable departmentNames: List<String>): List<DepartmentResponseDto> {
         log.info("Received getAllDepartments filtered by names {} request", departmentNames)
-        return departmentService.getAllDepartmentsFilteredByNames(departmentNames);
+        return departmentService.getAllDepartmentsFilteredByNames(departmentNames)
+    }
+
+    @PostMapping()
+    @ResponseStatus(CREATED)
+    fun createDepartment(@RequestBody departmentCreateRequestDto: DepartmentCreateRequestDto) {
+        log.info("Received createDepartment requestDto $departmentCreateRequestDto")
+        //todo: impl....
+    }
+
+    @Operation(summary = "Update department by id")
+    @PutMapping("/{departmentId}")
+    @ResponseStatus(OK)
+    fun updateDepartmentById(
+        @Parameter(schema = Schema(defaultValue = "0ff29382-4537-42b8-bdac-81a229ba0bd1"))
+        @PathVariable departmentId: String,
+        @RequestBody departmentUpdateRequestDto: DepartmentUpdateRequestDto
+    ): DepartmentResponseDto {
+        log.info("Received updateDepartment requestDto $departmentUpdateRequestDto")
+        return departmentService.updateDepartmentById(departmentId, departmentUpdateRequestDto)
     }
 
     @DeleteMapping("/{departmentName}")

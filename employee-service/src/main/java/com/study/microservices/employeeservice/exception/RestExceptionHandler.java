@@ -64,8 +64,9 @@ public class RestExceptionHandler {
     public ApiDtoValidationExceptionResponse handleRequestDtoValidationExceptions(MethodArgumentNotValidException ex) {
         val validationErrors = new HashMap<String, String>();
         val requestDtoClassName = Objects.requireNonNull(ex.getTarget()).getClass().getSimpleName();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
+
+        ex.getFieldErrors().forEach(error -> {
+            String fieldName = error.getField();
             String errorMessage = error.getDefaultMessage();
             validationErrors.put(fieldName, errorMessage);
         });
@@ -79,10 +80,10 @@ public class RestExceptionHandler {
         return new ResponseEntity<>(apiError, httpStatus);
     }
 
-    private record ApiErrorResponse(String message) {
+    public record ApiErrorResponse(String message) {
     }
 
-    private record ApiDtoValidationExceptionResponse(String message, Map<String, String> validationErrors) {
+    public record ApiDtoValidationExceptionResponse(String message, Map<String, String> validationErrors) {
     }
 
 }
