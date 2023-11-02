@@ -40,11 +40,12 @@ class DepartmentService(
     @Transactional
     @Retryable(retryFor = [ObjectOptimisticLockingFailureException::class], maxAttempts = 3, backoff = Backoff(delay = 100))
     fun updateDepartmentById(departmentId: String, departmentUpdateRequestDto: DepartmentUpdateRequestDto): DepartmentResponseDto {
-        val storedDepartment = employeeDepartmentRepository.findById(UUID.fromString(departmentId))
+        return employeeDepartmentRepository.findById(UUID.fromString(departmentId))
+            .map {
+                it.departmentName = departmentUpdateRequestDto.departmentName
+                DepartmentResponseDto(it.departmentName)
+            }
             .orElseThrow { EmployeeDepartmentNotFoundException("Department with id $departmentId not found") }
-
-        storedDepartment.departmentName = departmentUpdateRequestDto.departmentName
-        return DepartmentResponseDto(storedDepartment.departmentName)
     }
 
 }
