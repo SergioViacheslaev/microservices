@@ -16,6 +16,13 @@ import java.util.UUID;
 
 public interface EmployeeRepository extends JpaRepository<EmployeeEntity, UUID>, JpaSpecificationExecutor<EmployeeEntity> {
 
+    @Override
+    @EntityGraph(
+            //EntityGraph.EntityGraphType.FETCH only loads child entities from attributePaths
+            type = EntityGraph.EntityGraphType.LOAD,
+            attributePaths = {"phones"})
+    Optional<EmployeeEntity> findById(UUID uuid);
+
     Optional<EmployeeView> findEmployeeEntityById(UUID id);
 
     @EntityGraph(
