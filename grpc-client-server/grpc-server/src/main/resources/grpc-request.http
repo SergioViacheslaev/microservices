@@ -1,0 +1,8 @@
+###
+GRPC localhost:9090/com.study.grpc.GreetingService/greeting
+
+{
+  "name": "Foo"
+}
+
+<> 2023-11-18T184155.OK.json

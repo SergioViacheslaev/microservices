@@ -1,0 +1,19 @@
+syntax = "proto3";
+package com.study.grpc;
+
+//gradle generateProto
+service GreetingService {
+  rpc greeting(GreetingRequest) returns (GreetingResponse);
+}
+
+message GreetingRequest {
+  //1 - int tag for string name, less memory
+  string name = 1;
+}
+
+message GreetingResponse {
+  string greeting = 1;
+}
+
+
+
