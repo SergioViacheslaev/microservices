@@ -1,0 +1,13 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: local-grpc-client
+
+grpc:
+  client:
+    local-grpc-server:
+      address: 'static://localhost:9090'
+      enableKeepAlive: true
+      keepAliveWithoutCalls: true
+      negotiationType: plaintext

@@ -1,4 +1,5 @@
 rootProject.name = "grpc-client-server"
 include(
-    "grpc-server"
+    "grpc-server",
+    "grpc-client"
 )
