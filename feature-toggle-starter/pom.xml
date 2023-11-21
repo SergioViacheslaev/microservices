@@ -13,10 +13,13 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>feature-toggle-starter</name>
     <description>feature-toggle-starter</description>
+
     <properties>
         <java.version>17</java.version>
         <kotlin.version>1.8.22</kotlin.version>
+        <snakeyaml.version>2.2</snakeyaml.version>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
