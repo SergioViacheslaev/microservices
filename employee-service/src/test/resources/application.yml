@@ -38,6 +38,17 @@ spring:
 batch-insertion:
   batch_size: 5
 
+
+togglz:
+  features:
+    get_all_employees:
+      enabled: true
+  console:
+    path: /togglz-console
+    secured: false
+    use-management-port: false
+    enabled: true
+
 logging:
   level:
     org.springframework.orm.jpa: DEBUG

@@ -1,10 +1,16 @@
-package com.study.microservices.employeeservice.exception;
+package com.study.microservices.employeeservice.controller;
 
+import com.study.microservices.employeeservice.exception.EmployeeBirthDateFormatException;
+import com.study.microservices.employeeservice.exception.EmployeeDepartmentNotFoundException;
+import com.study.microservices.employeeservice.exception.EmployeeFoundException;
+import com.study.microservices.employeeservice.exception.EmployeeNotFoundException;
+import com.study.microservices.employeeservice.exception.EmployeePhoneFoundException;
+import com.study.microservices.employeeservice.exception.EmployeePhoneTypeFormatException;
+import com.study.microservices.employeeservice.exception.FeatureToggleDisabledException;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -20,6 +26,11 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @RestControllerAdvice
 @Slf4j
 public class RestExceptionHandler {
+
+    @ExceptionHandler(FeatureToggleDisabledException.class)
+    public ResponseEntity<ApiErrorResponse> handleFeatureToggleDisabledException(FeatureToggleDisabledException ex) {
+        return buildResponseEntity(new ApiErrorResponse(ex.getMessage()), BAD_REQUEST);
+    }
 
     @ExceptionHandler(EmployeeNotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleEmployeeNotFoundException(EmployeeNotFoundException ex) {

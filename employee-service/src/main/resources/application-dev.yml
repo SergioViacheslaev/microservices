@@ -12,3 +12,13 @@ logging:
     org.springframework.orm.jpa: DEBUG
     org.hibernate.orm.jdbc.bind: TRACE
     org.springframework.transaction: DEBUG
+
+togglz:
+  features:
+    get_all_employees:
+      enabled: true
+  console:
+    path: /togglz-console
+    secured: false
+    use-management-port: false
+    enabled: true

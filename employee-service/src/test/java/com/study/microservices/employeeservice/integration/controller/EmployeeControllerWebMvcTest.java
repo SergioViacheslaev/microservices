@@ -12,10 +12,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.togglz.core.manager.FeatureManager;
 
 import java.time.LocalDate;
 import java.util.List;
 
+import static com.study.microservices.employeeservice.config.FeatureToggles.GET_ALL_EMPLOYEES_FEATURE;
 import static com.study.microservices.employeeservice.objects_utils.EmployeeObjectUtils.createEmployeeEntity;
 import static com.study.microservices.employeeservice.objects_utils.EmployeeObjectUtils.createEmployeeRequestDto;
 import static com.study.microservices.employeeservice.objects_utils.EmployeeObjectUtils.createEmployeeResponseDto;
@@ -38,11 +40,15 @@ public class EmployeeControllerWebMvcTest {
     ObjectMapper objectMapper;
 
     @MockBean
+    FeatureManager featureManager;
+
+    @MockBean
     EmployeeService employeeService;
 
     @Test
     @DisplayName("Должен создать нового сотрудника")
     void should_create_new_employee() throws Exception {
+
         val employeeRequestDto = createEmployeeRequestDto();
 
         mockMvc.perform(post(API_URL)
@@ -93,6 +99,7 @@ public class EmployeeControllerWebMvcTest {
     @Test
     @DisplayName("Должен вернуть всех сотрудников")
     void should_get_all_employees() throws Exception {
+        when(featureManager.isActive(GET_ALL_EMPLOYEES_FEATURE)).thenReturn(true);
         when(employeeService.getAllEmployees()).thenReturn(List.of(createEmployeeResponseDto(createEmployeeEntity())));
 
         mockMvc.perform(get(API_URL))
