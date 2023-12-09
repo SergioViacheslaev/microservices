@@ -2,6 +2,7 @@ package com.study.microservices.springbootredis.controller
 
 import com.study.microservices.springbootredis.model.dto.UserDto
 import com.study.microservices.springbootredis.service.UserService
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -15,6 +16,11 @@ class UserController(
     @GetMapping
     fun getAllUsers(): List<UserDto> {
         return userService.findAllUsers()
+    }
+
+    @DeleteMapping
+    fun deleteAllUsers() {
+        return userService.deleteAllUsers()
     }
 
 }
