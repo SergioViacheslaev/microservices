@@ -74,6 +74,7 @@ public class EmployeeEntity extends AuditedEntity {
     private EmployeePassportEntity passport;
 
     @OneToMany(cascade = ALL, mappedBy = "employee", fetch = FetchType.LAZY)
+    @ToString.Exclude
     private List<EmployeePhoneEntity> phones;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {
@@ -85,6 +86,7 @@ public class EmployeeEntity extends AuditedEntity {
     @JoinTable(name = "employees_departments",
             joinColumns = @JoinColumn(name = "employee_id"),
             inverseJoinColumns = @JoinColumn(name = "department_id"))
+    @ToString.Exclude
     private Set<EmployeeDepartmentEntity> departments;
 
     /**
