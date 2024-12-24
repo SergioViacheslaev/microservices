@@ -2,19 +2,29 @@ package com.study.microservices.employeeservice.repo;
 
 import com.study.microservices.employeeservice.model.entity.EmployeeEntity;
 import com.study.microservices.employeeservice.model.projection.EmployeeView;
+import jakarta.persistence.QueryHint;
+import org.hibernate.jpa.AvailableHints;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 public interface EmployeeRepository extends JpaRepository<EmployeeEntity, UUID>, JpaSpecificationExecutor<EmployeeEntity> {
+
+    @Query("""
+            select e
+            from EmployeeEntity e
+            """
+    )
+    @QueryHints(
+            @QueryHint(name = AvailableHints.HINT_FETCH_SIZE, value = "25")
+    )
+    Stream<EmployeeEntity> findAllEmployees();
 
     @Override
     @EntityGraph(
