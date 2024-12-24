@@ -91,7 +91,7 @@ public class EmployeeController {
         }
     }
 
-    @Operation(summary = "Find Employee by id", description = "Get only Employee entity main info")
+    @Operation(summary = "Find Employee by id", description = "Get only main info about Employee")
     @GetMapping(path = "/{employeeId}")
     public ResponseEntity<EmployeeMainInfoResponseDto> findEmployeeById(
             @Parameter(description = "Searched employee's id", schema = @Schema(defaultValue = "b16355a9-3edf-418d-bafc-52e46f6703e1"))
@@ -108,7 +108,7 @@ public class EmployeeController {
         return new ResponseEntity<>(employeeService.getAllEmployeesBySurnameSortedByBirthDate(employeeSurname, page, size), HttpStatus.OK);
     }
 
-    @Operation(summary = "Find Employee by phone number", description = "Find Employee by phone number")
+    @Operation(summary = "Find Employee by phone number", description = "Get all info about Employee by phone number")
     @GetMapping(path = "/search/phone/{phoneNumber}")
     public ResponseEntity<EmployeeResponseDto> findEmployeeByPhoneNumber(
             @Parameter(description = "Searched employee's phone number", schema = @Schema(defaultValue = "792112345671"))

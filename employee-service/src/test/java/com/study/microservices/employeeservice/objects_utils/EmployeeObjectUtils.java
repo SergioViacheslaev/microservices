@@ -37,9 +37,9 @@ public class EmployeeObjectUtils {
                 .departmentName("АХО")
                 .build();
 
-        employeeEntity.addPhones(employeePhoneEntities);
         employeeEntity.addPassport(employeePassportEntity);
         employeeEntity.addDepartment(employeeDepartmentEntity);
+        employeeEntity.addPhones(employeePhoneEntities);
 
         return employeeEntity;
     }
