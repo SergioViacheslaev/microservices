@@ -4,18 +4,14 @@ import com.study.microservices.employeeservice.exception.EmployeeDepartmentNotFo
 import com.study.microservices.employeeservice.exception.EmployeeFoundException;
 import com.study.microservices.employeeservice.exception.EmployeeNotFoundException;
 import com.study.microservices.employeeservice.exception.EmployeePhoneFoundException;
-import com.study.microservices.employeeservice.model.dto.EmployeeCreateRequestDto;
-import com.study.microservices.employeeservice.model.dto.EmployeeMainInfoResponseDto;
-import com.study.microservices.employeeservice.model.dto.EmployeePassport;
-import com.study.microservices.employeeservice.model.dto.EmployeeResponseDto;
-import com.study.microservices.employeeservice.model.dto.EmployeeUpdateRequestDto;
-import com.study.microservices.employeeservice.model.dto.PhoneType;
+import com.study.microservices.employeeservice.model.dto.*;
 import com.study.microservices.employeeservice.model.entity.EmployeeEntity;
 import com.study.microservices.employeeservice.model.entity.EmployeePassportEntity;
 import com.study.microservices.employeeservice.model.entity.EmployeePhoneEntity;
 import com.study.microservices.employeeservice.model.events.EmployeeEvent;
 import com.study.microservices.employeeservice.model.events.EmployeeEventType;
 import com.study.microservices.employeeservice.model.mapper.EmployeeMapper;
+import com.study.microservices.employeeservice.model.projection.EmployeeView;
 import com.study.microservices.employeeservice.repo.EmployeeDepartmentRepository;
 import com.study.microservices.employeeservice.repo.EmployeePhoneRepository;
 import com.study.microservices.employeeservice.repo.EmployeeRepository;
@@ -211,6 +207,16 @@ public class EmployeeService {
                         .registrationAddress(employeeEntity.getPassport().getRegistrationAddress())
                         .build())
                 .build();
+    }
+
+    @Transactional(readOnly = true)
+    public EmployeeViewResponseDto getEmployeeViewById(String employeeId) {
+        val employeeViewResponseDto = employeeRepository.findEmployeeEntityById(UUID.fromString(employeeId))
+                .map(EmployeeView::toEmployeeViewResponseDto)
+                .orElseThrow(() -> new EmployeeNotFoundException(String.format("Employee with such id %s not found", employeeId)));
+
+        log.info("Found Employee with view: {}", employeeViewResponseDto);
+        return employeeViewResponseDto;
     }
 
     private void validateEmployeeCreateRequestDto(EmployeeCreateRequestDto employeeCreateRequestDto) {

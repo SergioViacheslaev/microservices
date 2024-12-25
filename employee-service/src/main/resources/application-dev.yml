@@ -13,6 +13,7 @@ logging:
     org.hibernate.orm.jdbc.bind: TRACE
     org.springframework.transaction: DEBUG
 
+#вкл/откл функционала в рантайме
 togglz:
   features:
     get_all_employees:

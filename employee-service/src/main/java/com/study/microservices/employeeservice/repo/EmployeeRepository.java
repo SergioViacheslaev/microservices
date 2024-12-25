@@ -1,6 +1,7 @@
 package com.study.microservices.employeeservice.repo;
 
 import com.study.microservices.employeeservice.model.entity.EmployeeEntity;
+import com.study.microservices.employeeservice.model.projection.EmployeeView;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -15,13 +16,15 @@ import java.util.UUID;
 
 public interface EmployeeRepository extends JpaRepository<EmployeeEntity, UUID>, JpaSpecificationExecutor<EmployeeEntity> {
 
+    Optional<EmployeeView> findEmployeeEntityById(UUID id);
+
+    Optional<EmployeeEntity> findByNameAndSurname(String employeeName, String employeeSurname);
+
     @EntityGraph(
             type = EntityGraph.EntityGraphType.FETCH,
             attributePaths = {"passport", "phones",})
     @Query(value = "SELECT e FROM EmployeeEntity e")
     List<EmployeeEntity> findAllWithPassportAndPhones();
-
-    Optional<EmployeeEntity> findByNameAndSurname(String employeeName, String employeeSurname);
 
     @EntityGraph(
             type = EntityGraph.EntityGraphType.FETCH,

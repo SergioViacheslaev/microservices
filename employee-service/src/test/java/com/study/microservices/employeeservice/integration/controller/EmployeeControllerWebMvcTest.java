@@ -17,10 +17,8 @@ import org.togglz.core.manager.FeatureManager;
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.study.microservices.employeeservice.config.FeatureToggles.GET_ALL_EMPLOYEES_FEATURE;
-import static com.study.microservices.employeeservice.objects_utils.EmployeeObjectUtils.createEmployeeEntity;
-import static com.study.microservices.employeeservice.objects_utils.EmployeeObjectUtils.createEmployeeRequestDto;
-import static com.study.microservices.employeeservice.objects_utils.EmployeeObjectUtils.createEmployeeResponseDto;
+import static com.study.microservices.employeeservice.config.toggles.FeatureToggles.GET_ALL_EMPLOYEES_FEATURE;
+import static com.study.microservices.employeeservice.objects_utils.EmployeeObjectUtils.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
