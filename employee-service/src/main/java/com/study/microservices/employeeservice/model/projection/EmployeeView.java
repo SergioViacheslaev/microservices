@@ -1,7 +1,8 @@
 package com.study.microservices.employeeservice.model.projection;
 
-import com.study.microservices.employeeservice.model.dto.EmployeeMainInfoResponseDto;
+import com.study.microservices.employeeservice.model.dto.EmployeeViewResponseDto;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 public interface EmployeeView {
@@ -11,11 +12,14 @@ public interface EmployeeView {
 
     String getSurname();
 
-    default EmployeeMainInfoResponseDto toEmployeeMainInfoDto() {
-        return EmployeeMainInfoResponseDto.builder()
+    LocalDate getBirthDate();
+
+    default EmployeeViewResponseDto toEmployeeViewResponseDto() {
+        return EmployeeViewResponseDto.builder()
                 .id(getId())
                 .name(getName())
                 .surname(getSurname())
+                .birthDate(getBirthDate())
                 .build();
     }
 }

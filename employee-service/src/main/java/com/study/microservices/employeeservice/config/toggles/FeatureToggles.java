@@ -1,4 +1,4 @@
-package com.study.microservices.employeeservice.config;
+package com.study.microservices.employeeservice.config.toggles;
 
 import lombok.experimental.UtilityClass;
 import org.togglz.core.Feature;

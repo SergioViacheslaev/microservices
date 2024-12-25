@@ -4,24 +4,21 @@ import com.study.microservices.employeeservice.exception.EmployeeDepartmentNotFo
 import com.study.microservices.employeeservice.exception.EmployeeFoundException;
 import com.study.microservices.employeeservice.exception.EmployeeNotFoundException;
 import com.study.microservices.employeeservice.exception.EmployeePhoneFoundException;
-import com.study.microservices.employeeservice.model.dto.EmployeeCreateRequestDto;
-import com.study.microservices.employeeservice.model.dto.EmployeeMainInfoResponseDto;
-import com.study.microservices.employeeservice.model.dto.EmployeePassport;
-import com.study.microservices.employeeservice.model.dto.EmployeeResponseDto;
-import com.study.microservices.employeeservice.model.dto.EmployeeUpdateRequestDto;
-import com.study.microservices.employeeservice.model.dto.PhoneType;
+import com.study.microservices.employeeservice.model.dto.*;
 import com.study.microservices.employeeservice.model.entity.EmployeeEntity;
 import com.study.microservices.employeeservice.model.entity.EmployeePassportEntity;
 import com.study.microservices.employeeservice.model.entity.EmployeePhoneEntity;
 import com.study.microservices.employeeservice.model.events.EmployeeEvent;
 import com.study.microservices.employeeservice.model.events.EmployeeEventType;
 import com.study.microservices.employeeservice.model.mapper.EmployeeMapper;
+import com.study.microservices.employeeservice.model.projection.EmployeeView;
 import com.study.microservices.employeeservice.repo.EmployeeDepartmentRepository;
 import com.study.microservices.employeeservice.repo.EmployeePhoneRepository;
 import com.study.microservices.employeeservice.repo.EmployeeRepository;
 import com.study.microservices.employeeservice.util.DtoUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.context.ApplicationEventPublisher;
@@ -42,6 +39,7 @@ import static org.springframework.data.jpa.domain.Specification.where;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class EmployeeService {
 
     private final ApplicationEventPublisher eventPublisher;
@@ -50,20 +48,6 @@ public class EmployeeService {
     private final EmployeeDepartmentRepository employeeDepartmentRepository;
     private final EmployeeMapper employeeMapper;
     private final EntityManager entityManager;
-
-    public EmployeeService(ApplicationEventPublisher eventPublisher,
-                           EmployeeRepository employeeRepository,
-                           EmployeePhoneRepository employeePhoneRepository,
-                           EmployeeDepartmentRepository employeeDepartmentRepository,
-                           EmployeeMapper employeeMapper,
-                           EntityManager entityManager) {
-        this.eventPublisher = eventPublisher;
-        this.employeeRepository = employeeRepository;
-        this.employeePhoneRepository = employeePhoneRepository;
-        this.employeeDepartmentRepository = employeeDepartmentRepository;
-        this.employeeMapper = employeeMapper;
-        this.entityManager = entityManager;
-    }
 
     @Transactional
     public EmployeeResponseDto createEmployee(EmployeeCreateRequestDto employeeCreateRequestDto) {
@@ -93,11 +77,10 @@ public class EmployeeService {
         employeeToCreate.addPhones(employeePhoneEntities);
 
         //fail creating new employee with non-existing department
-        employeeCreateRequestDto.departments().forEach(dtoDepartment -> {
-            val departmentEntity = employeeDepartmentRepository.findByDepartmentName(dtoDepartment.departmentName())
+        employeeCreateRequestDto.departments().forEach(departmentDto -> {
+            val departmentEntity = employeeDepartmentRepository.findByDepartmentName(departmentDto.departmentName())
                     .orElseThrow(() -> new EmployeeDepartmentNotFoundException(
-                            String.format("Department with name %s does not exist", dtoDepartment.departmentName())));
-
+                            String.format("Department with name %s does not exist", departmentDto.departmentName())));
             employeeToCreate.addDepartment(departmentEntity);
         });
 
@@ -194,7 +177,7 @@ public class EmployeeService {
 
     @Transactional(readOnly = true)
     public EmployeeResponseDto findEmployeeByPhoneNumber(String phoneNumber) {
-        val employeeEntity = employeeRepository.findByPhoneNumber(phoneNumber)
+        val employeeEntity = employeeRepository.findByPhones_PhoneNumber(phoneNumber)
                 .orElseThrow(() -> new EmployeeNotFoundException(String.format("Employee with such phone number %s doesn't exist", phoneNumber)));
 
         log.info("Found employeeEntity {}", employeeEntity);
@@ -226,17 +209,25 @@ public class EmployeeService {
                 .build();
     }
 
+    @Transactional(readOnly = true)
+    public EmployeeViewResponseDto getEmployeeViewById(String employeeId) {
+        val employeeViewResponseDto = employeeRepository.findEmployeeEntityById(UUID.fromString(employeeId))
+                .map(EmployeeView::toEmployeeViewResponseDto)
+                .orElseThrow(() -> new EmployeeNotFoundException(String.format("Employee with such id %s not found", employeeId)));
+
+        log.info("Found Employee with view: {}", employeeViewResponseDto);
+        return employeeViewResponseDto;
+    }
+
     private void validateEmployeeCreateRequestDto(EmployeeCreateRequestDto employeeCreateRequestDto) {
         val employeeName = employeeCreateRequestDto.name();
         val employeeSurname = employeeCreateRequestDto.surname();
 
-        employeeRepository.findByNameAndSurname(employeeName, employeeSurname)
-                .ifPresent(employee -> {
-                    throw new EmployeeFoundException(String.format("Employee with name %s, surname %s already exists", employeeName, employeeSurname));
-                });
+        if (employeeRepository.existsEmployeeEntityByNameAndSurname(employeeName, employeeSurname)) {
+            throw new EmployeeFoundException(String.format("Employee with name %s, surname %s already exists", employeeName, employeeSurname));
+        }
 
         employeeCreateRequestDto.phones().forEach(phoneDto -> {
-            PhoneType.getPhoneTypeFromString(phoneDto.phoneType());
             if (employeePhoneRepository.existsByPhoneNumber(phoneDto.phoneNumber())) {
                 throw new EmployeePhoneFoundException(String.format("This phone number %s is already exists", phoneDto.phoneNumber()));
             }
@@ -244,3 +235,4 @@ public class EmployeeService {
     }
 
 }
+
