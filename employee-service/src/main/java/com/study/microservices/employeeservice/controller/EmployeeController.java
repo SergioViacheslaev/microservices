@@ -27,7 +27,7 @@ import org.togglz.core.manager.FeatureManager;
 
 import java.util.List;
 
-import static com.study.microservices.employeeservice.config.FeatureToggles.GET_ALL_EMPLOYEES_FEATURE;
+import static com.study.microservices.employeeservice.config.toggles.FeatureToggles.GET_ALL_EMPLOYEES_FEATURE;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
