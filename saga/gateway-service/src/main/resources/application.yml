@@ -17,7 +17,6 @@ eureka:
   instance:
     prefer-ip-address: true
 
-
 logging:
   level:
     reactor:

@@ -7,7 +7,6 @@ plugins {
     id("io.spring.dependency-management") version "$springDependencyManagementVersion"
 }
 
-
 java {
     sourceCompatibility = JavaVersion.VERSION_17
 }
@@ -35,7 +34,6 @@ subprojects {
         testCompileOnly("org.projectlombok:lombok:${properties["lombokVersion"]}")
     }
 
-
     tasks.test {
         useJUnitPlatform()
     }
@@ -45,5 +43,3 @@ subprojects {
 tasks.bootJar {
     enabled = false
 }
-
-//gradle clean build -x test

@@ -3,6 +3,7 @@ package com.microservices.saga.ordersservice.axon.handler;
 import com.microservices.saga.ordersservice.axon.event.OrderApprovedEvent;
 import com.microservices.saga.ordersservice.axon.event.OrderCreatedEvent;
 import com.microservices.saga.ordersservice.axon.event.OrderRejectedEvent;
+import com.microservices.saga.ordersservice.exception.OrderNotFoundException;
 import com.microservices.saga.ordersservice.model.entity.OrderEntity;
 import com.microservices.saga.ordersservice.repository.OrdersRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,8 +37,8 @@ public class OrderEventsHandler {
         val orderEntity = ordersRepository.findByOrderId(orderApprovedEvent.getOrderId());
 
         if (orderEntity == null) {
-            // TODO: do something
-            return;
+            log.error("Order with id {} not found", orderApprovedEvent.getOrderId());
+            throw new OrderNotFoundException(String.format("Order with id %s not found", orderApprovedEvent.getOrderId()));
         }
 
         orderEntity.setOrderStatus(orderApprovedEvent.getOrderStatus());

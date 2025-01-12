@@ -66,13 +66,11 @@ public class OrderSaga {
 
         try {
             val userPaymentDetails = MockDataUtils.createPaymentDetails();
-
             val processPaymentCommand = ProcessPaymentCommand.builder()
                     .orderId(productReservedEvent.getOrderId())
                     .paymentDetails(userPaymentDetails)
                     .paymentId(UUID.randomUUID().toString())
                     .build();
-
             val processPaymentResult = commandGateway.sendAndWait(processPaymentCommand);
 
             if (processPaymentResult == null) {
