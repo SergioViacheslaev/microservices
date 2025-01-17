@@ -1,0 +1,1 @@
+# Example of Kafka listener with batch processing
