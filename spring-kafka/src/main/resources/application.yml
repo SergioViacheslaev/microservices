@@ -1,2 +1,59 @@
 server:
     port: 8080
+
+spring:
+    datasource:
+        url: jdbc:h2:mem:salary_processing_db;MODE=PostgreSQL
+        username: sa
+        password: sa
+        driverClassName: org.h2.Driver
+    jpa:
+        open-in-view: false
+        defer-datasource-initialization: false
+        hibernate:
+            ddl-auto: create-drop
+        properties:
+            hibernate:
+                format_sql: true
+                show_sql: true
+                jdbc:
+                    batch_size: 50
+                order_inserts: true
+                generate_statistics: true
+                use_sql_comments: true
+    docker:
+        compose:
+            enabled: false
+    kafka:
+        listener:
+            type: batch
+            ack-mode: manual_immediate
+        bootstrap-servers: localhost:9092
+        producer:
+            key-serializer: org.apache.kafka.common.serialization.StringSerializer
+            value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+            properties:
+                ack: all
+        consumer:
+            key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+            value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+            properties:
+                spring.json.trusted.packages: com.t1academy.tasks.task2kafka.model.dto
+#            enable-auto-commit: true
+
+client:
+    registrationTopic: client-registration-topic
+    registrationGroup: client-registration-topic
+    registeredTopic: client-registered-topic
+
+logging:
+    level:
+        org.springframework.orm.jpa: DEBUG
+        org.hibernate.orm.jdbc.bind: DEBUG
+        org.springframework.transaction: DEBUG
+        org.apache.kafka.clients.producer.ProducerConfig: DEBUG
+        org.springframework.kafka: INFO
+        root: info
+
+
+
